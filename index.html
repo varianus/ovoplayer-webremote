@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" type="text/css" href="css/w3.css">  
+    <link rel="stylesheet" type="text/css" href="css/w3.css">      
+    <script src="js/ovoplayer.js"></script>
+</head>
+<body>
+<header>
+  <nav class="w3-bar">
+      <ul>
+        <li class="w3-bar-item"><a href="#"><i class="ico-music"></i>Home</a></li>
+        <li class="w3-bar-item "><a class="active" href="#">Tutorials</a></li>
+        <li class="w3-bar-item "><a href="#">About</a></li>
+        <li class="w3-bar-item "><a href="#">Newsletter</a></li>
+        <li class="w3-bar-item "><a href="#">Contact</a></li>
+      </ul>
+  </nav>
+</header>
+
+<main class="content">
+  <section id="player" class="w3-card4">
+    <button class="w3-btn w3-grey ico-play" onclick="webSocketConnect();"></button>
+    <button class="w3-btn w3-grey ico-pause"></button>
+    <button class="w3-btn w3-grey ico-stop"></button>    
+  </section>
+
+
+  <section id="playlist">
+  </section>
+
+</main>
+
+<footer class="main-footer">
+</footer>
+
+  <script>
+  // tell the embed parent frame the height of the content
+  if (window.parent && window.parent.parent){
+    window.parent.parent.postMessage(["resultsFrame", {
+      height: document.body.getBoundingClientRect().height,
+      slug: "6hfw1z23"
+    }], "*")
+  }
+</script>
+
+</body>
+</html>
