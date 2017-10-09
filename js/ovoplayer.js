@@ -20,10 +20,22 @@ function webSocketConnect() {
   }
 }
 
+function sendCommand(category, command, params) {
+
+  var msg = "AAAA" + category + ":" + command
+  if (params)
+    msg += "=" + params
+
+  socket.send(msg)
+
+}
+
+
 function connected() {
   console.log('connected')
-  socket.send('xxxxcfg:keep')
-  socket.send('xxxxcfg:autopos')
+  sendCommand('cfg', 'keep')
+  sendCommand('cfg', 'autopos')
+
 }
 
 function get_appropriate_ws_url() {
@@ -55,9 +67,7 @@ function split_message(msg) {
   obj.category = tokens[0]
   obj.command = tokens[1]
   obj.param = tokens[2]
-    /* obj.category = msg.slice(4, msg.indexOf(":"))
-     obj.command = msg.slice(msg.indexOf(":")+1, msg.indexOf("="))
-     obj.param = msg.slice(msg.indexOf("=")+1)*/
+
   return obj
 
 }

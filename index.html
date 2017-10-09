@@ -1,50 +1,64 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="robots" content="noindex, nofollow">
-    <link rel="stylesheet" type="text/css" href="css/w3.css">  
-    <link rel="stylesheet" type="text/css" href="css/ovoplayer-font.css">      
-    <script src="js/ovoplayer.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/w3.css">
+  <link rel="stylesheet" type="text/css" href="css/ovoplayer-font.css">
+  <script src="js/ovoplayer.js"></script>
 </head>
+
 <body>
-<header>
-  <nav class="w3-bar">
+  <header>
+    <nav class="w3-bar">
       <ul>
-        <li class="w3-bar-item"><a href="#"><i class="ico-music"></i>Home</a></li>
+        <li class="w3-bar-item"><a onclick="webSocketConnect();"><i class="ico-music"></i>Connect</a></li>
         <li class="w3-bar-item "><a class="active" href="#">Tutorials</a></li>
         <li class="w3-bar-item "><a href="#">About</a></li>
         <li class="w3-bar-item "><a href="#">Newsletter</a></li>
         <li class="w3-bar-item "><a href="#">Contact</a></li>
       </ul>
-  </nav>
-</header>
+    </nav>
+  </header>
 
-<main class="content">
-  <section id="player" class="w3-card4">
-    <button class="w3-btn w3-grey ico-play" onclick="webSocketConnect();"></button>
-    <button class="w3-btn w3-grey ico-pause"></button>
-    <button class="w3-btn w3-grey ico-stop"></button>    
-  </section>
+  <main class="w3-container content">
+    <section id="player" class="w3-card-4">
+      <header class="w3-container  w3-light-grey">
+        <h3>Title</h3>
+      </header>
+      <div class="w3-container">
+        <img src="asset/nocover.png" alt="Cover" class="w3-left w3-margin-right" style="width:100px">
+        <p id="tag1">Artist<br> Album
+        </p>
+
+      </div>
+      <div class="w3-container">
+        <button class="w3-btn w3-grey ico-play" onclick="sendCommand('action','play');"></button>
+        <button class="w3-btn w3-grey ico-pause" onclick="sendCommand('action','pause');"></button>
+        <button class="w3-btn w3-grey ico-stop"></button>
+      </div>
+    </section>
 
 
-  <section id="playlist">
-  </section>
+    <section id="playlist">
+    </section>
 
-</main>
+  </main>
 
-<footer class="main-footer">
-</footer>
+  <footer class="main-footer">
+  </footer>
 
   <script>
-  // tell the embed parent frame the height of the content
-  if (window.parent && window.parent.parent){
-    window.parent.parent.postMessage(["resultsFrame", {
-      height: document.body.getBoundingClientRect().height,
-      slug: "6hfw1z23"
-    }], "*")
-  }
-</script>
+    // tell the embed parent frame the height of the content
+    if (window.parent && window.parent.parent) {
+      window.parent.parent.postMessage(["resultsFrame", {
+        height: document.body.getBoundingClientRect().height,
+        slug: "6hfw1z23"
+      }], "*")
+    }
+  </script>
 
 </body>
+
 </html>
