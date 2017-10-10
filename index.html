@@ -25,15 +25,15 @@
   <main class="w3-container content">
     <section id="player" class="w3-card-4">
       <header class="w3-container  w3-light-grey">
-        <h3>Title</h3>
+        <h3 id="title">Title</h3>
       </header>
       <div class="w3-container">
-        <img src="asset/nocover.png" alt="Cover" class="w3-left w3-margin-right" style="width:100px">
-        <p id="tag1">Artist<br> Album
+        <img src="asset/nocover.png" alt="Cover" id='cover' class="w3-left w3-margin-right" style="width:100px">
+        <p><span id="artist">Artist</span><br><span id="album">Album</span>
         </p>
-
+        <input id='songpos' type="range" min=0 max=600000 value=23000 step=1000 style="width:100%">
       </div>
-      <div class="w3-container">
+      <div class="w3-container w3-padding">
         <button class="w3-btn w3-grey ico-play" onclick="sendCommand('action','play');"></button>
         <button class="w3-btn w3-grey ico-pause" onclick="sendCommand('action','pause');"></button>
         <button class="w3-btn w3-grey ico-stop"></button>
