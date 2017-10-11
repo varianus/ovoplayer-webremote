@@ -39,7 +39,8 @@ function connected () {
   sendCommand('cfg', 'keep')
   sendCommand('cfg', 'autopos')
   sendCommand('req', 'meta')
-  sendCommand('req', 'coverurl')  
+  sendCommand('req', 'coverurl')
+  sendCommand('req', 'vol')
 }
 
 function get_appropriate_ws_url () {
@@ -115,16 +116,12 @@ function split_message (msg) {
   var obj = new ovoCommand()
   obj.size = decodeOvoLength(msg.substr(0, 4))
 
-  /*var tokens = msg.slice(4).split(new RegExp('[:=](.+)', 'g'))
-  obj.category = tokens[0]
-  obj.command = tokens[1]
-  obj.param = tokens[2]*/
-  var colon =  msg.indexOf(':')
+  var colon = msg.indexOf(':')
   obj.category = msg.slice(4, colon)
   var pos = msg.indexOf('=')
   if (pos > -1) {
     obj.command = msg.slice(colon + 1, pos)
-    obj.param = msg.slice(pos+1)
+    obj.param = msg.slice(pos + 1)
   } else {
     obj.command = msg.slice(colon + 1)
   }
@@ -144,21 +141,32 @@ function handle_message (msg) {
         case 'pos':
           byId('songpos').value = message.param
           break
+        case 'vol':
+          byId('volume').value = message.param
+          break
         case 'meta':
           var meta = decodeMeta(message.param)
           byId('songpos').max = meta.Duration
           byId('title').innerText = meta.Title
           byId('artist').innerText = meta.Artist
-          byId('album').innerText = meta.Album          
+          byId('album').innerText = meta.Album
           break
         case 'coverurl':
           byId('cover').src = message.param
           break
         case 'coverimg':
-          byId('cover').src = "data:image/jpeg;base64, "+ message.param
-          break  
-            
+          byId('cover').src = 'data:image/jpeg;base64, ' + message.param
+          break
+
       }
       break
   }
+}
+
+function setVolume(){
+  sendCommand("action","vol",byId("volume").value)
+}
+
+function seek(){
+  sendCommand("action","seek",byId("songpos").value)
 }

@@ -13,35 +13,52 @@
   <header>
     <nav class="w3-bar">
       <ul>
-        <li class="w3-bar-item"><a onclick="webSocketConnect();"><i class="ico-music"></i>Connect</a></li>
-        <li class="w3-bar-item "><a class="active" href="#">Tutorials</a></li>
+        <li class="w3-bar-item">
+          <a onclick="webSocketConnect();">
+            <i class="ico-music"></i>Connect</a>
+        </li>
+        <!--      <li class="w3-bar-item "><a class="active" href="#">Tutorials</a></li>
         <li class="w3-bar-item "><a href="#">About</a></li>
         <li class="w3-bar-item "><a href="#">Newsletter</a></li>
-        <li class="w3-bar-item "><a href="#">Contact</a></li>
+        <li class="w3-bar-item "><a href="#">Contact</a></li> -->
       </ul>
     </nav>
   </header>
 
-  <main class="w3-container content">
-    <section id="player" class="w3-card-4">
+  <main class="w3-main content">
+    <section id="player" class="w3-card w3-panel">
       <header class="w3-container  w3-light-grey">
         <h3 id="title">Title</h3>
       </header>
       <div class="w3-container">
         <img src="asset/nocover.png" alt="Cover" id='cover' class="w3-left w3-margin-right" style="width:100px">
-        <p><span id="artist">Artist</span><br><span id="album">Album</span>
+        <p>
+          <span id="artist">Artist</span>
+          <br>
+          <span id="album">Album</span>
         </p>
-        <input id='songpos' type="range" min=0 max=600000 value=23000 step=1000 style="width:100%">
+        <input id='songpos' type="range" min=0 max=600000 value=23000 step=1000 style="width:100%" oninput="seek();">
       </div>
-      <div class="w3-container w3-padding">
-        <button class="w3-btn w3-grey ico-play" onclick="sendCommand('action','play');"></button>
-        <button class="w3-btn w3-grey ico-pause" onclick="sendCommand('action','pause');"></button>
-        <button class="w3-btn w3-grey ico-stop"></button>
+      <div class="w3-container w3-padding w3-navbar">
+        <button class="w3-btn w3-bar-item w3-grey ico-to-start" onclick="sendCommand('action','previous');"></button>
+        <button class="w3-btn w3-bar-item w3-grey ico-pause" onclick="sendCommand('action','pause');"></button>
+        <button class="w3-btn w3-bar-item w3-grey ico-stop" onclick="sendCommand('action','stop');"></button>
+        <button class="w3-btn w3-bar-item w3-grey ico-to-end" onclick="sendCommand('action','next');"></button>
+        <input class="w3-bar-item w3-right" id='volume' type="range" min=0 max=256 value=256 step=1 oninput="setVolume();">
       </div>
+
     </section>
 
-
-    <section id="playlist">
+    <section id="playlist" class="w3-card w3-panel">
+      <table class="w3-table">
+        <thead>
+          <th>Title</th>
+          <th>Artist</th>
+          <th>Album</th>
+        </thead>
+        <tbody id="pl-data">
+        </tbody>
+      </table>
     </section>
 
   </main>
