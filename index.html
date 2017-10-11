@@ -49,12 +49,15 @@
 
     </section>
 
-    <section id="playlist" class="w3-card w3-panel">
-      <table class="w3-table">
+    <section id="playlist" class="w3-card w3-panel" style ="overflow-y: auto;height: 200px;">
+      <button class="w3-btn w3-bar-item w3-grey ico-list" onclick="sendCommand('req','playlist');"></button> 
+      <table class="w3-table-all  ">
         <thead>
+          <tr class="tabheader">
           <th>Title</th>
           <th>Artist</th>
           <th>Album</th>
+        </tr>
         </thead>
         <tbody id="pl-data">
         </tbody>
@@ -69,7 +72,7 @@
   <script>
     // tell the embed parent frame the height of the content
     if (window.parent && window.parent.parent) {
-      window.parent.parent.postMessage(["resultsFrame", {
+      window.parent.parent.postMessage(["playlist", {
         height: document.body.getBoundingClientRect().height,
         slug: "6hfw1z23"
       }], "*")

@@ -112,6 +112,22 @@ function decodeMeta (meta) {
   return obj
 }
 
+function decodePlayList (meta) {
+  var startpos = 4
+  var objs = []
+
+  var totlen = decodeOvoLength(meta.substr(0, 4))
+  var count = meta.substr(4, totlen) * 1
+  startpos += totlen
+
+  while (count > 0){ var len = decodeOvoLength(meta.substr(startpos, 4))
+    objs.push(decodeMeta(meta.substr(startpos, len)))
+    startpos += (len + 4)
+    count -= 1
+  }
+  return objs
+}
+
 function split_message (msg) {
   var obj = new ovoCommand()
   obj.size = decodeOvoLength(msg.substr(0, 4))
@@ -127,6 +143,23 @@ function split_message (msg) {
   }
 
   return obj
+}
+
+function msToTime(duration) {
+  var milliseconds = parseInt((duration%1000)/100)
+      , seconds = parseInt((duration/1000)%60)
+      , minutes = parseInt((duration/(1000*60))%60)
+      , hours = parseInt((duration/(1000*60*60))%24);
+
+   if (hours > 0) {
+     hours = hours + ":"
+     minutes = (minutes < 10) ? "0" + minutes : minutes;
+  } else {
+    hours =""
+  }
+  seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+  return hours + minutes + ":" + seconds;
 }
 
 function handle_message (msg) {
@@ -157,16 +190,30 @@ function handle_message (msg) {
         case 'coverimg':
           byId('cover').src = 'data:image/jpeg;base64, ' + message.param
           break
+        case 'playlist':
+          var playlist = decodePlayList(message.param)
+          var tableObj = byId('pl-data')
+          tableObj.innerText = ''
+          for (var i = 0; i < playlist.length; i++) {
+            var row = tableObj.insertRow(-1)
+            var c0 = row.insertCell(0)
+            c0.innerText = playlist[i].Title
+            var c1 = row.insertCell(1)
+            c1.innerText = playlist[i].Artist
+            var c2 = row.insertCell(2)
+            c2.innerText = msToTime(playlist[i].Duration)
+          }
+          break
 
       }
       break
   }
 }
 
-function setVolume(){
-  sendCommand("action","vol",byId("volume").value)
+function setVolume () {
+  sendCommand('action', 'vol', byId('volume').value)
 }
 
-function seek(){
-  sendCommand("action","seek",byId("songpos").value)
+function seek () {
+  sendCommand('action', 'seek', byId('songpos').value)
 }
