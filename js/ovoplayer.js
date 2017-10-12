@@ -38,10 +38,15 @@ function connected () {
   console.log('connected')
   sendCommand('cfg', 'keep')
   sendCommand('cfg', 'autopos')
+  sendCommand('cfg', 'size', 1)
   sendCommand('req', 'meta')
   sendCommand('req', 'coverurl')
   sendCommand('req', 'vol')
 }
+
+
+
+
 
 function get_appropriate_ws_url () {
   return 'ws://127.0.0.1:6860/player'
