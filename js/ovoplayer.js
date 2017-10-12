@@ -173,6 +173,7 @@ function handle_message (msg) {
       switch (message.command) {
         case 'pos':
           byId('songpos').value = message.param
+          byId('textPos').innerText = msToTime(message.param)
           break
         case 'vol':
           byId('volume').value = message.param
@@ -183,6 +184,7 @@ function handle_message (msg) {
           byId('title').innerText = meta.Title
           byId('artist').innerText = meta.Artist
           byId('album').innerText = meta.Album
+          byId('textDuration').innerText = msToTime(meta.Duration)
           break
         case 'coverurl':
           byId('cover').src = message.param

@@ -1,0 +1,43 @@
+html,
+body {
+  height: 100%;
+  margin: 0
+}
+
+section {
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12)
+}
+
+section:before, section:after {
+  content: "";
+  display: table;
+  clear: both
+}
+
+header.h5 {
+  color: #000!important;
+  background-color: #f1f1f1!important
+}
+
+@media (min-width: 550px) {
+  .box {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+  }
+  
+  .box .controls {
+    flex: 0 1 auto;
+  }
+  
+  .box .content  {
+    flex: 1 1 auto;
+    overflow-y: auto;
+  }
+  
+  .box footer {
+    flex: 0 1 40px;
+  }
+  
+  
+}

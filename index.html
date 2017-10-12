@@ -2,83 +2,75 @@
 <html>
 
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="robots" content="noindex, nofollow">
-  <link rel="stylesheet" type="text/css" href="css/w3.css">
+  <link rel="stylesheet" type="text/css" href="css/normalize.css">
+  <link rel="stylesheet" type="text/css" href="css/skeleton.css">
+  <link rel="stylesheet" type="text/css" href="css/styles.css">
   <link rel="stylesheet" type="text/css" href="css/ovoplayer-font.css">
   <script src="js/ovoplayer.js"></script>
 </head>
 
 <body>
-  <header>
-    <nav class="w3-bar">
-      <ul>
-        <li class="w3-bar-item">
-          <a onclick="webSocketConnect();">
-            <i class="ico-music"></i>Connect</a>
-        </li>
-        <!--      <li class="w3-bar-item "><a class="active" href="#">Tutorials</a></li>
-        <li class="w3-bar-item "><a href="#">About</a></li>
-        <li class="w3-bar-item "><a href="#">Newsletter</a></li>
-        <li class="w3-bar-item "><a href="#">Contact</a></li> -->
-      </ul>
-    </nav>
-  </header>
+  <div class="container box">
+    <header>
+      <nav class="container">
+        <ul>
+          <li>
+            <a onclick="webSocketConnect();">
+              <i class="ico-music"></i>Connect</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
 
-  <main class="w3-main content">
-    <section id="player" class="w3-card w3-panel">
-      <header class="w3-container  w3-light-grey">
-        <h3 id="title">Title</h3>
+    <section id="player" class="controls">
+      <header>
+        <h5 id="title">Title</h4>
       </header>
-      <div class="w3-container">
-        <img src="asset/nocover.png" alt="Cover" id='cover' class="w3-left w3-margin-right" style="width:100px">
-        <p>
+      <div class="row">
+        <img src="asset/nocover.png" alt="Cover" id='cover' class="two columns" style="width:100px">
+        <div class="seven columns">
           <span id="artist">Artist</span>
           <br>
           <span id="album">Album</span>
-        </p>
-        <input id='songpos' type="range" min=0 max=600000 value=23000 step=1000 style="width:100%" oninput="seek();">
+        </div>
       </div>
-      <div class="w3-container w3-padding w3-navbar">
-        <button class="w3-btn w3-bar-item w3-grey ico-to-start" onclick="sendCommand('action','previous');"></button>
-        <button class="w3-btn w3-bar-item w3-grey ico-pause" onclick="sendCommand('action','pause');"></button>
-        <button class="w3-btn w3-bar-item w3-grey ico-stop" onclick="sendCommand('action','stop');"></button>
-        <button class="w3-btn w3-bar-item w3-grey ico-to-end" onclick="sendCommand('action','next');"></button>
-        <input class="w3-bar-item w3-right" id='volume' type="range" min=0 max=256 value=256 step=1 oninput="setVolume();">
+      <div class="row">
+        <div class="nine columns">
+          <input id="songpos" class="u-full-width" type="range" min=0 max=600000 value=23000 step=1000 oninput="seek();"></input>
+        </div>
+        <div class="three columns"><span id="textPos">0:00</span>/<span id="textDuration">0:00</span></div>
       </div>
 
+      <div class="row">
+        <button class="two columns ico-to-start" onclick="sendCommand('action','previous');"></button>
+        <button class="two columns ico-pause" onclick="sendCommand('action','pause');"></button>
+        <button class="two columns ico-stop" onclick="sendCommand('action','stop');"></button>
+        <button class="two columns ico-to-end" onclick="sendCommand('action','next');"></button>
+        <div class="three columns">
+          <input id="volume" class="u-full-width" type="range" min=0 max=256 value=256 step=1 oninput="setVolume();">
+        </div>
+      </div>
     </section>
-
-    <section id="playlist" class="w3-card w3-panel" style ="overflow-y: auto;height: 200px;">
-      <button class="w3-btn w3-bar-item w3-grey ico-list" onclick="sendCommand('req','playlist');"></button> 
-      <table class="w3-table-all  ">
+    <br>
+    <section id="playlist" class="content">
+      <button class="ico-list" onclick="sendCommand('req','playlist');"></button>
+      <table class="w3-table-all">
         <thead>
           <tr class="tabheader">
-          <th>Title</th>
-          <th>Artist</th>
-          <th>Album</th>
-        </tr>
+            <th>Title</th>
+            <th>Artist</th>
+            <th>Album</th>
+          </tr>
         </thead>
         <tbody id="pl-data">
         </tbody>
       </table>
     </section>
-
-  </main>
-
-  <footer class="main-footer">
-  </footer>
-
-  <script>
-    // tell the embed parent frame the height of the content
-    if (window.parent && window.parent.parent) {
-      window.parent.parent.postMessage(["playlist", {
-        height: document.body.getBoundingClientRect().height,
-        slug: "6hfw1z23"
-      }], "*")
-    }
-  </script>
-
+    <footer>by Marco Caselli</footer>
+  </div>
 </body>
 
 </html>
