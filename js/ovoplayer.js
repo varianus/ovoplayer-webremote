@@ -1,8 +1,8 @@
-function byId (id) {
+function byId(id) {
   return document.getElementById(id)
 }
 
-function webSocketConnect () {
+function webSocketConnect() {
   if (typeof MozWebSocket != 'undefined') {
     socket = new MozWebSocket(get_appropriate_ws_url())
   } else {
@@ -24,7 +24,7 @@ function webSocketConnect () {
   }
 }
 
-function sendCommand (category, command, params) {
+function sendCommand(category, command, params) {
   var msg = category + ':' + command
   if (params)
     msg += '=' + params
@@ -34,11 +34,12 @@ function sendCommand (category, command, params) {
   socket.send(msg)
 }
 
-function connected () {
+function connected() {
   console.log('connected')
   sendCommand('cfg', 'keep')
   sendCommand('cfg', 'autopos')
   sendCommand('cfg', 'size', 1)
+  sendCommand('req', 'state')
   sendCommand('req', 'meta')
   sendCommand('req', 'coverurl')
   sendCommand('req', 'vol')
@@ -48,11 +49,11 @@ function connected () {
 
 
 
-function get_appropriate_ws_url () {
+function get_appropriate_ws_url() {
   return 'ws://127.0.0.1:6860/player'
 }
 
-function decodeOvoLength (base64) {
+function decodeOvoLength(base64) {
   var binary_string = window.atob(base64)
   var len = binary_string.length
   var num = 0
@@ -62,7 +63,7 @@ function decodeOvoLength (base64) {
   return num
 }
 
-function encodeOvoLength (len) {
+function encodeOvoLength(len) {
   var binary_string = ''
   for (var i = 0; i < 3; i++) {
     binary_string += String.fromCharCode(len >> ((2 - i) * 8) & 0xff)
@@ -91,11 +92,11 @@ var ovoMeta = function () {
   this.Year = ''
 }
 
-function decodeMeta (meta) {
+function decodeMeta(meta) {
   var obj = new ovoMeta()
   var startpos = 4
 
-  function extractfield () {
+  function extractfield() {
     len = decodeOvoLength(meta.substr(startpos, 4))
     startpos += 4
     var oldpos = startpos
@@ -117,7 +118,7 @@ function decodeMeta (meta) {
   return obj
 }
 
-function decodePlayList (meta) {
+function decodePlayList(meta) {
   var startpos = 4
   var objs = []
 
@@ -125,7 +126,8 @@ function decodePlayList (meta) {
   var count = meta.substr(4, totlen) * 1
   startpos += totlen
 
-  while (count > 0){ var len = decodeOvoLength(meta.substr(startpos, 4))
+  while (count > 0) {
+    var len = decodeOvoLength(meta.substr(startpos, 4))
     objs.push(decodeMeta(meta.substr(startpos, len)))
     startpos += (len + 4)
     count -= 1
@@ -133,7 +135,7 @@ function decodePlayList (meta) {
   return objs
 }
 
-function split_message (msg) {
+function split_message(msg) {
   var obj = new ovoCommand()
   obj.size = decodeOvoLength(msg.substr(0, 4))
 
@@ -151,23 +153,23 @@ function split_message (msg) {
 }
 
 function msToTime(duration) {
-  var milliseconds = parseInt((duration%1000)/100)
-      , seconds = parseInt((duration/1000)%60)
-      , minutes = parseInt((duration/(1000*60))%60)
-      , hours = parseInt((duration/(1000*60*60))%24);
+  var milliseconds = parseInt((duration % 1000) / 100),
+    seconds = parseInt((duration / 1000) % 60),
+    minutes = parseInt((duration / (1000 * 60)) % 60),
+    hours = parseInt((duration / (1000 * 60 * 60)) % 24);
 
-   if (hours > 0) {
-     hours = hours + ":"
-     minutes = (minutes < 10) ? "0" + minutes : minutes;
+  if (hours > 0) {
+    hours = hours + ":"
+    minutes = (minutes < 10) ? "0" + minutes : minutes;
   } else {
-    hours =""
+    hours = ""
   }
   seconds = (seconds < 10) ? "0" + seconds : seconds;
 
   return hours + minutes + ":" + seconds;
 }
 
-function handle_message (msg) {
+function handle_message(msg) {
   if (msg.data.length == 0)
     return
 
@@ -211,16 +213,33 @@ function handle_message (msg) {
             c2.innerText = msToTime(playlist[i].Duration)
           }
           break
+        case 'state':
+          byId('playbtn').classList.remove("ico-play", "ico-pause")
+          switch (message.param) {
+            case "0":
+              byId('plstate').className = "ico-stop"
+              byId('playbtn').classList.add("ico-play");
+              break
+            case "1":
+              byId('plstate').className  ="ico-play"
+              byId('playbtn').classList.add("ico-pause");
+              break
+            case "2":
+              byId('plstate').className  ="ico-stop"
+              byId('playbtn').classList.add("ico-play");
+              break
 
+          }
+          break
       }
       break
   }
 }
 
-function setVolume () {
+function setVolume() {
   sendCommand('action', 'vol', byId('volume').value)
 }
 
-function seek () {
+function seek() {
   sendCommand('action', 'seek', byId('songpos').value)
 }

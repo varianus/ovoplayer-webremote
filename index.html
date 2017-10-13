@@ -18,8 +18,8 @@
       <nav class="container">
         <ul>
           <li>
-            <a onclick="webSocketConnect();">
-              <i class="ico-music"></i>Connect</a>
+            <a onclick="webSocketConnect();" class="button">
+              Connect</a>
           </li>
         </ul>
       </nav>
@@ -27,10 +27,10 @@
 
     <section id="player" class="controls">
       <header>
-        <h5 id="title">Title</h4>
+        <h5><i id="plstate" class="ico-music"></i><span  id="title">Title</span></h5>
       </header>
       <div class="row">
-        <img src="asset/nocover.png" alt="Cover" id='cover' class="two columns" style="width:100px">
+        <a><img src="asset/nocover.png" alt="Cover" id='cover' class="two columns" style="width:100px"></a>
         <div class="seven columns">
           <span id="artist">Artist</span>
           <br>
@@ -46,7 +46,7 @@
 
       <div class="row">
         <button class="two columns ico-to-start" onclick="sendCommand('action','previous');"></button>
-        <button class="two columns ico-pause" onclick="sendCommand('action','pause');"></button>
+        <button id="playbtn" class="two columns ico-pause" onclick="sendCommand('action','playpause');"></button>
         <button class="two columns ico-stop" onclick="sendCommand('action','stop');"></button>
         <button class="two columns ico-to-end" onclick="sendCommand('action','next');"></button>
         <div class="three columns">

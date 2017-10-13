@@ -19,6 +19,9 @@ header.h5 {
   background-color: #f1f1f1!important
 }
 
+nav ul {
+  list-style: none; }
+
 @media (min-width: 550px) {
   .box {
     display: flex;
