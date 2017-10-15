@@ -1,14 +1,16 @@
 html,
 body {
   height: 100%;
-  margin: 0
+  margin: 0;
+  background-color: #fff;
 }
 
 section {
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12)
 }
 
-section:before, section:after {
+section:before,
+section:after {
   content: "";
   display: table;
   clear: both
@@ -19,8 +21,29 @@ header.h5 {
   background-color: #f1f1f1!important
 }
 
+#toast {
+  visibility: hidden;
+  min-width: 250px;
+  margin-left: -125px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 2px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1;
+  right: 30px;
+  top: 30px;
+  font-size: 17px;
+}
+
+#toast.show {
+  visibility: visible;
+}
+
 nav ul {
-  list-style: none; }
+  list-style: none;
+}
 
 @media (min-width: 550px) {
   .box {
@@ -28,19 +51,14 @@ nav ul {
     flex-flow: column;
     height: 100%;
   }
-  
   .box .controls {
     flex: 0 1 auto;
   }
-  
-  .box .content  {
+  .box .content {
     flex: 1 1 auto;
     overflow-y: auto;
   }
-  
   .box footer {
     flex: 0 1 40px;
   }
-  
-  
 }

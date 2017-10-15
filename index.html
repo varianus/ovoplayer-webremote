@@ -12,22 +12,22 @@
   <script src="js/ovoplayer.js"></script>
 </head>
 
-<body>
+<body onload="init();">
   <div class="container box">
     <header>
       <nav class="container">
         <ul>
-          <li>
-            <a onclick="webSocketConnect();" class="button">
-              Connect</a>
+          <li> 
+            <!--    <a onclick="webSocketConnect();" class="button">
+              Connect</a>-->
           </li>
         </ul>
       </nav>
     </header>
-
+    <div id="toast">...</div>
     <section id="player" class="controls">
       <header>
-        <h5><i id="plstate" class="ico-music"></i><span  id="title">Title</span></h5>
+        <h5><i id="plstate" class="ico-music"></i><span id="title">Title</span></h5>
       </header>
       <div class="row">
         <a><img src="asset/nocover.png" alt="Cover" id='cover' class="two columns" style="width:100px"></a>
