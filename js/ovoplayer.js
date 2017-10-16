@@ -248,6 +248,8 @@
              case "1":
                byId('plstate').className = "ico-play"
                byId('playbtn').classList.add("ico-pause");
+               sendCommand('req', 'meta')
+               sendCommand('req', 'coverurl')
                break
              case "2":
                byId('plstate').className = "ico-stop"

@@ -21,6 +21,10 @@ header.h5 {
   background-color: #f1f1f1!important
 }
 
+#player img {
+  width:100px;
+}
+
 #toast {
   visibility: hidden;
   min-width: 250px;
@@ -60,5 +64,8 @@ nav ul {
   }
   .box footer {
     flex: 0 1 40px;
+  }
+  #player img {
+    width:200px;
   }
 }
