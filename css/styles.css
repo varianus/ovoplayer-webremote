@@ -22,7 +22,7 @@ header.h5 {
 }
 
 #player img {
-  width:100px;
+  width:200px;
 }
 
 #toast {
@@ -39,6 +39,10 @@ header.h5 {
   right: 30px;
   top: 30px;
   font-size: 17px;
+}
+
+.selected {
+  background: rgb(29, 226, 95)
 }
 
 #toast.show {
@@ -66,6 +70,6 @@ nav ul {
     flex: 0 1 40px;
   }
   #player img {
-    width:200px;
+    width:100px;
   }
 }
