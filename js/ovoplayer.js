@@ -217,7 +217,7 @@ function handle_message(msg) {
         case 'coverurl':
         case 'coverimg':
           if (message.param === "")
-            byId('cover').src = 'asset/noconver.png'
+            byId('cover').src = 'asset/nocover.png'
           else
             byId('cover').src = message.param
           break
