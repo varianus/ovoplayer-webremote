@@ -53,6 +53,21 @@ nav ul {
   list-style: none;
 }
 
+
+.table-fixed thead div {
+   position: fixed;
+}
+
+.table-fixed th {
+  height: 0%;
+  text-align: left;
+}
+
+.table-fixed th {
+  padding: 1em; 
+}
+
+
 @media (min-width: 550px) {
   .box {
     display: flex;

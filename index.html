@@ -56,18 +56,20 @@
     </section>
     <br>
     <section id="playlist" class="content">
-      <button class="ico-list" onclick="sendCommand('req','playlist');"></button>
-      <table id="tabpl">
+  <!--    <button class="ico-list" onclick="sendCommand('req','playlist');"></button> -->
+      <div>
+      <table id="tabpl" class="table-fixed">
         <thead>
           <tr class="tabheader">
-            <th>Title</th>
-            <th>Artist</th>
-            <th>Album</th>
+            <th><div>Title</div></th>
+            <th><div>Artist</div></th>
+            <th><div>Duration</div></th>
           </tr>
         </thead>
         <tbody id="pl-data">
         </tbody>
       </table>
+    </div>    
     </section>
     <footer><center>by Marco Caselli</center></footer>
   </div>

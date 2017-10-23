@@ -68,6 +68,9 @@ function connected() {
   sendCommand('req', 'meta')
   sendCommand('req', 'coverimg')
   sendCommand('req', 'vol')
+  sendCommand('req','playlist')
+  sendCommand('req','index')
+
 }
 
 function get_appropriate_w_url(server, port) {
@@ -270,6 +273,10 @@ function handle_message(msg) {
             // trele[message.param].scrollIntoView([])
           }
           break
+        case 'plchange':
+         sendCommand('req','playlist')
+         sendCommand('req','index')
+         break
       }
       break
   }
