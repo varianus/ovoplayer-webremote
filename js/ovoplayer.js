@@ -1,12 +1,18 @@
 function init() {
-  var server = localStorage.getItem('server')
-  var port = localStorage.getItem('port')
+  if (localStorage) {
+    var server = localStorage.getItem('server')
+    var port = localStorage.getItem('port')
+  }
+
   if (!server) {
     server = '127.0.0.1'
-    localStorage.setItem('server', server)
   }
+
   if (!port) {
     port = '6860'
+  }
+  if (localStorage) {
+    localStorage.setItem('server', server)
     localStorage.setItem('port', port)
   }
   webSocketConnect(server, port)
@@ -24,6 +30,15 @@ function toast(message) {
     x.className = x.className.replace('show', '')
   }, 4000)
 }
+
+function showinfo(message) {
+  var x = byId('songinfo')
+  x.className = 'show'
+  setTimeout(function () {
+    x.className = x.className.replace('show', '')
+  }, 4000)
+}
+
 
 function webSocketConnect(server, port) {
   if (typeof MozWebSocket != 'undefined') {
@@ -68,8 +83,8 @@ function connected() {
   sendCommand('req', 'meta')
   sendCommand('req', 'coverimg')
   sendCommand('req', 'vol')
-  sendCommand('req','playlist')
-  sendCommand('req','index')
+  sendCommand('req', 'playlist')
+  sendCommand('req', 'index')
 
 }
 
@@ -103,6 +118,7 @@ var ovoCommand = function () {
 }
 
 var ovoMeta = function () {
+  this.Index = 0
   this.ID = 0
   this.FileName = ''
   this.Album = ''
@@ -127,7 +143,7 @@ function decodeMeta(meta) {
     startpos += len
     return meta.substr(oldpos, len)
   }
-
+  obj.Index = extractfield()
   obj.ID = extractfield()
   obj.FileName = extractfield()
   obj.Album = extractfield()
@@ -211,11 +227,22 @@ function handle_message(msg) {
           break
         case 'meta':
           var meta = decodeMeta(message.param)
-          byId('songpos').max = meta.Duration
-          byId('title').innerText = meta.Title
-          byId('artist').innerText = meta.Artist
-          byId('album').innerText = meta.Album
-          byId('textDuration').innerText = msToTime(meta.Duration)
+
+          if (meta.Index == -1) {
+            byId('songpos').max = meta.Duration
+            byId('title').innerText = meta.Title
+            byId('artist').innerText = meta.Artist
+            byId('album').innerText = meta.Album
+            byId('textDuration').innerText = msToTime(meta.Duration)
+          }
+          byId('i_tile').innerText = meta.Title
+          byId('i_album').innerText = meta.Album
+          byId('i_albumartist').innerText = meta.AlbumArtist
+          byId('i_artist').innerText = meta.Artist
+          byId('i_track').innerText = meta.TrackString
+          byId('i_genre').innerText = meta.Genre
+          byId('i_year').innerText = meta.Year
+          byId('i_Comment').innerText = meta.Comment
           break
         case 'coverurl':
         case 'coverimg':
@@ -236,11 +263,19 @@ function handle_message(msg) {
             c1.innerText = playlist[i].Artist
             var c2 = row.insertCell(2)
             c2.innerText = msToTime(playlist[i].Duration)
-            row.onclick = (function () {
+            var ci = row.insertCell(3)
+            ci.innerHTML = '<i class="ico-info-circled"></i>'
+            ci.onclick = (function () {
               return function () {
-                sendCommand('action', 'play', this.rowIndex - 1)
+                sendCommand('req', 'meta', this.parentElement.rowIndex)
+                showinfo()
               }
             })()
+            /*     row.onclick = (function () {
+                  return function () {
+                    sendCommand('action', 'play', this.rowIndex - 1)
+                  }
+                })()*/
           }
           break
         case 'state':
@@ -274,9 +309,9 @@ function handle_message(msg) {
           }
           break
         case 'plchange':
-         sendCommand('req','playlist')
-         sendCommand('req','index')
-         break
+          sendCommand('req', 'playlist')
+          sendCommand('req', 'index')
+          break
       }
       break
   }

@@ -17,7 +17,7 @@
     <header>
       <nav class="container">
         <ul>
-          <li> 
+          <li>
             <!--    <a onclick="webSocketConnect();" class="button">
               Connect</a>-->
           </li>
@@ -25,12 +25,28 @@
       </nav>
     </header>
     <div id="toast">...</div>
+    <div id="songinfo">
+     <p> <label class "twocolums">Title:</label><span class="tencolumns"       id="i_tile">Title</span></p>
+     <p> <label class "twocolums">Album:</label><span  class="tencolumns"      id="i_album">Album</span></p>
+     <p> <label class "twocolums">Album Artist:</label><span class="tencolumns" id="i_albumartist">Album</span></p>
+     <p> <label class "twocolums">Artist:</label><span  class="tencolumns"     id="i_artist">Artist</span></p>
+     <p> <label class "twocolums">Track:</label><span class="tencolumns"       id="i_track">TrackString</span></p>
+     <p> <label class "twocolums">Genre:</label><span class="tencolumns"       id="i_genre">Genre</span></p>
+     <p> <label class "twocolums">Year:</label><span  class="tencolumns"       id="i_year">Year</span></p>
+     <p> <label class "twocolums">Comment:</label><span  class="tencolumns"    id="i_Comment">Comment</span></p>
+    </div>
+
     <section id="player" class="controls">
       <header>
-        <h5><i id="plstate" class="ico-music"></i><span id="title">Title</span></h5>
+        <h5>
+          <i id="plstate" class="ico-music"></i>
+          <span id="title">Title</span>
+        </h5>
       </header>
       <div class="row">
-       <a href="#"><img src="asset/nocover.png" alt="Cover" id="cover" class="two columns" onclick="window.open(this.src)"></a>
+        <a href="#">
+          <img src="asset/nocover.png" alt="Cover" id="cover" class="two columns" onclick="window.open(this.src)">
+        </a>
         <div class="seven columns">
           <span id="artist">Artist</span>
           <br>
@@ -41,12 +57,15 @@
         <div class="nine columns">
           <input id="songpos" class="u-full-width" type="range" min=0 max=600000 value=23000 step=1000 oninput="seek();"></input>
         </div>
-        <div class="three columns"><span id="textPos">0:00</span>/<span id="textDuration">0:00</span></div>
+        <div class="three columns">
+          <span id="textPos">0:00</span>/
+          <span id="textDuration">0:00</span>
+        </div>
       </div>
 
       <div class="row">
         <button class="two columns ico-to-start" onclick="sendCommand('action','previous');"></button>
-        <button id="playbtn" class="two columns ico-pause" onclick="sendCommand('action','playpause');"></button>
+        <button class="two columns ico-pause" id="playbtn" onclick="sendCommand('action','playpause');"></button>
         <button class="two columns ico-stop" onclick="sendCommand('action','stop');"></button>
         <button class="two columns ico-to-end" onclick="sendCommand('action','next');"></button>
         <div class="three columns">
@@ -56,22 +75,24 @@
     </section>
     <br>
     <section id="playlist" class="content">
-  <!--    <button class="ico-list" onclick="sendCommand('req','playlist');"></button> -->
-      <div>
-      <table id="tabpl" class="table-fixed">
+      <table id="tabpl">
         <thead>
-          <tr class="tabheader">
-            <th><div>Title</div></th>
-            <th><div>Artist</div></th>
-            <th><div>Duration</div></th>
-          </tr>
+          <div>
+            <tr class="tabheader">
+              <th>Title</th>
+              <th>Artist</th>
+              <th>Duration</th>
+            </tr>
+          </div>
         </thead>
         <tbody id="pl-data">
         </tbody>
       </table>
-    </div>    
+
     </section>
-    <footer><center>by Marco Caselli</center></footer>
+    <footer>
+      <center>by Marco Caselli</center>
+    </footer>
   </div>
 </body>
 

@@ -9,6 +9,14 @@ section {
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12)
 }
 
+#tablepl td {
+  text-overflow: ellipsis;
+}
+
+#tablepl td:hover {
+  text-overflow: initial;
+}
+
 section:before,
 section:after {
   content: "";
@@ -22,7 +30,7 @@ header.h5 {
 }
 
 #player img {
-  width:200px;
+  width: 200px;
 }
 
 #toast {
@@ -41,32 +49,29 @@ header.h5 {
   font-size: 17px;
 }
 
+#songinfo {
+  visibility: hidden;
+  min-width: 600px;
+  background-color: #555;
+  color: #fff;
+  border-radius: 2px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1;
+}
+
+
 .selected {
   background: rgb(29, 226, 95)
 }
 
-#toast.show {
+#songinfo.show,  #toast.show {
   visibility: visible;
 }
 
 nav ul {
   list-style: none;
 }
-
-
-.table-fixed thead div {
-   position: fixed;
-}
-
-.table-fixed th {
-  height: 0%;
-  text-align: left;
-}
-
-.table-fixed th {
-  padding: 1em; 
-}
-
 
 @media (min-width: 550px) {
   .box {
@@ -85,6 +90,6 @@ nav ul {
     flex: 0 1 40px;
   }
   #player img {
-    width:100px;
+    width: 100px;
   }
 }
