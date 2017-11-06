@@ -34,11 +34,11 @@ function toast(message) {
 function showinfo(message) {
   var x = byId('songinfo')
   x.className = 'show'
-  setTimeout(function () {
-    x.className = x.className.replace('show', '')
-  }, 4000)
 }
-
+function closeinfo() {
+  var x = byId('songinfo')
+  x.className = x.className.replace('show', '')
+}
 
 function webSocketConnect(server, port) {
   if (typeof MozWebSocket != 'undefined') {

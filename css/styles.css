@@ -1,12 +1,21 @@
 html,
 body {
+  
   height: 100%;
   margin: 0;
   background-color: #fff;
+  }  
+
+@media (min-width: 550px) {
+  html { font-size: 75%; }
 }
 
 section {
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12)
+}
+
+big {
+  font-size: 2rem;
 }
 
 #tablepl td {
@@ -51,7 +60,7 @@ header.h5 {
 
 #songinfo {
   visibility: hidden;
-  min-width: 600px;
+  min-width: 300px;
   background-color: #555;
   color: #fff;
   border-radius: 2px;
@@ -93,3 +102,4 @@ nav ul {
     width: 100px;
   }
 }
+
