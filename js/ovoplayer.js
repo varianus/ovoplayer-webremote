@@ -26,7 +26,7 @@ function toast(message) {
   var x = byId('toast')
   x.innerText = message
   x.className = 'show'
-  setTimeout(function () {
+  setTimeout(function() {
     x.className = x.className.replace('show', '')
   }, 4000)
 }
@@ -35,6 +35,7 @@ function showinfo(message) {
   var x = byId('songinfo')
   x.className = 'show'
 }
+
 function closeinfo() {
   var x = byId('songinfo')
   x.className = x.className.replace('show', '')
@@ -48,14 +49,14 @@ function webSocketConnect(server, port) {
   }
 
   try {
-    socket.onopen = function () {
+    socket.onopen = function() {
       toast('Connected')
       connected()
     }
-    socket.onmessage = function (msg) {
+    socket.onmessage = function(msg) {
       handle_message(msg)
     }
-    socket.onclose = function () {
+    socket.onclose = function() {
       toast('Disconnected')
       console.log('disconnected')
     }
@@ -110,14 +111,14 @@ function encodeOvoLength(len) {
   return btoa(binary_string)
 }
 
-var ovoCommand = function () {
+var ovoCommand = function() {
   this.size = 0
   this.category = ''
   this.command = ''
   this.param = ''
 }
 
-var ovoMeta = function () {
+var ovoMeta = function() {
   this.Index = 0
   this.ID = 0
   this.FileName = ''
@@ -225,6 +226,10 @@ function handle_message(msg) {
         case 'vol':
           byId('volume').value = message.param
           break
+        case 'mute':
+          toggleMute(true)
+          break
+
         case 'meta':
           var meta = decodeMeta(message.param)
 
@@ -265,17 +270,17 @@ function handle_message(msg) {
             c2.innerText = msToTime(playlist[i].Duration)
             var ci = row.insertCell(3)
             ci.innerHTML = '<i class="ico-info-circled"></i>'
-            ci.onclick = (function () {
-              return function () {
-                sendCommand('req', 'meta', this.parentElement.rowIndex)
-                showinfo()
-              }
-            })()
-            /*     row.onclick = (function () {
-                  return function () {
-                    sendCommand('action', 'play', this.rowIndex - 1)
-                  }
-                })()*/
+            ci.onclick = (function() {
+                return function() {
+                  sendCommand('req', 'meta', this.parentElement.rowIndex)
+                  showinfo()
+                }
+              })()
+              /*     row.onclick = (function () {
+                    return function () {
+                      sendCommand('action', 'play', this.rowIndex - 1)
+                    }
+                  })()*/
           }
           break
         case 'state':
@@ -305,7 +310,7 @@ function handle_message(msg) {
           }
           if (trele.length > 1) {
             trele[message.param].classList.add('selected')
-            // trele[message.param].scrollIntoView([])
+              // trele[message.param].scrollIntoView([])
           }
           break
         case 'plchange':
@@ -316,6 +321,18 @@ function handle_message(msg) {
       break
   }
 }
+
+function toggleMute(onlygui) {
+  var muteCtl = byId('mute')
+  if (!onlygui) {
+    if (muteCtl.classList.contains('ico-volume-off')) {
+      sendCommand('action', 'mute')
+    } else { sendCommand('action', 'unmute') }
+  } else
+    muteCtl.classList.toggle('ico-volume-off', 'ico-volume-up')
+
+}
+
 
 function setVolume() {
   sendCommand('action', 'vol', byId('volume').value)
