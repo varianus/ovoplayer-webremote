@@ -31,6 +31,13 @@ function toast(message) {
   }, 4000)
 }
 
+function openImg(src) {
+  var newTab = window.open();
+  newTab.document.body.innerHTML = '<img src="' + src + '">'
+    //  window.open(largeImgSrc, "title here", "width=400, height=300");
+  return false;
+}
+
 function showinfo(message) {
   var x = byId('songinfo')
   x.className = 'show'
@@ -84,9 +91,9 @@ function connected() {
   sendCommand('req', 'meta')
   sendCommand('req', 'coverimg')
   sendCommand('req', 'vol')
+  sendCommand('req', 'mute')
   sendCommand('req', 'playlist')
   sendCommand('req', 'index')
-
 }
 
 function get_appropriate_w_url(server, port) {
@@ -217,7 +224,7 @@ function handle_message(msg) {
   message = split_message(msg.data)
 
   switch (message.category) {
-    case 'info':
+    case 'inf':
       switch (message.command) {
         case 'pos':
           byId('songpos').value = message.param
@@ -227,7 +234,7 @@ function handle_message(msg) {
           byId('volume').value = message.param
           break
         case 'mute':
-          toggleMute(true)
+          toggleMute(message.param)
           break
 
         case 'meta':
@@ -251,7 +258,7 @@ function handle_message(msg) {
           break
         case 'coverurl':
         case 'coverimg':
-          if (message.param === "")
+          if (message.param === '')
             byId('cover').src = 'asset/nocover.png'
           else
             byId('cover').src = message.param
@@ -270,6 +277,7 @@ function handle_message(msg) {
             c2.innerText = msToTime(playlist[i].Duration)
             var ci = row.insertCell(3)
             ci.innerHTML = '<i class="ico-info-circled"></i>'
+
             ci.onclick = (function() {
                 return function() {
                   sendCommand('req', 'meta', this.parentElement.rowIndex)
@@ -322,22 +330,26 @@ function handle_message(msg) {
   }
 }
 
-function toggleMute(onlygui) {
-  var muteCtl = byId('mute')
-  if (!onlygui) {
-    if (muteCtl.classList.contains('ico-volume-off')) {
-      sendCommand('action', 'mute')
-    } else { sendCommand('action', 'unmute') }
+function toggleMute(gui) {
+  if (gui == 0) {
+    byId('mute').classList.remove('ico-volume-off')
+    byId('mute').classList.add('ico-volume-up')
   } else
-    muteCtl.classList.toggle('ico-volume-off', 'ico-volume-up')
-
+  if (gui == 1) {
+    byId('mute').classList.remove('ico-volume-up')
+    byId('mute').classList.add('ico-volume-off')
+  } else {
+    if (byId('mute').classList.contains('ico-volume-off'))
+      sendCommand('act', 'unmute')
+    else
+      sendCommand('act', 'mute')
+  }
 }
 
-
 function setVolume() {
-  sendCommand('action', 'vol', byId('volume').value)
+  sendCommand('act', 'vol', byId('volume').value)
 }
 
 function seek() {
-  sendCommand('action', 'seek', byId('songpos').value)
+  sendCommand('act', 'seek', byId('songpos').value)
 }

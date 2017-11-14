@@ -103,3 +103,10 @@ nav ul {
   }
 }
 
+.toolbar .columns {
+  margin: 1px;
+}
+
+.bordered {
+  border: 5px outset; 
+}
