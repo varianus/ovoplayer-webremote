@@ -46,7 +46,7 @@
       </header>
       <div class="row">
         <a href="#">
-          <img src="asset/nocover.png" alt="Cover" id="cover" class="two columns" onclick="window.open(this.src)">
+          <img src="asset/nocover.png" alt="Cover" id="cover" class="two columns" onclick="openImg(this.src);">
         </a>
         <div class="seven columns">
           <span id="artist">Artist</span>
@@ -64,13 +64,17 @@
         </div>
       </div>
 
-      <div class="row">
-        <button class="two columns ico-to-start" onclick="sendCommand('action','previous');"></button>
-        <button class="two columns ico-pause" id="playbtn" onclick="sendCommand('action','playpause');"></button>
-        <button class="two columns ico-stop" onclick="sendCommand('action','stop');"></button>
-        <button class="two columns ico-to-end" onclick="sendCommand('action','next');"></button>
-        <div class="three columns">
-          <input id="volume" class="u-full-width" type="range" min=0 max=256 value=256 step=1 oninput="setVolume();">
+      <div class="row toolbar">
+        
+          <button class="two columns ico-to-start" onclick="sendCommand('action','previous');"></button>
+          <button class="two columns ico-pause button-primary" id="playbtn" onclick="sendCommand('action','playpause');"></button>
+          <button class="two columns ico-stop" onclick="sendCommand('action','stop');"></button>
+          <button class="two columns ico-to-end" onclick="sendCommand('action','next');"></button>
+        
+      <div class="row toolbar"></div>
+        <div class="six columns">
+           <button id="mute" class="one columns ico-volume-off"  onclick="toggleMute();"></button>
+          <input id="volume" class="four columns" type="range" min=0 max=256 value=256 step=1 oninput="setVolume();">
         </div>
       </div>
     </section>
