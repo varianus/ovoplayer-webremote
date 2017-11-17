@@ -25,16 +25,16 @@
       </nav>
     </header>
     <div id="toast">...</div>
-    <div id="songinfo" class ="container box">
-     <button class="button-primary u-pull-right big" onclick="closeinfo();">X</button><br> 
-     <p><label>Title:</label><span        id="i_tile">Title</span></p>
-     <p><label>Album:</label><span        id="i_album">Album</span></p>
-     <p><label>Album Artist:</label><span id="i_albumartist">Album</span></p>
-     <p><label>Artist:</label><span       id="i_artist">Artist</span></p>
-     <p><label>Track:</label><span        id="i_track">TrackString</span></p>
-     <p><label>Genre:</label><span        id="i_genre">Genre</span></p>
-     <p><label>Year:</label><span         id="i_year">Year</span></p>
-     <p><label>Comment:</label><span      id="i_Comment">Comment</span></p>
+    <div id="songinfo" class="container box">
+      <button class="button-primary u-pull-right big" onclick="closeinfo();">X</button><br>
+      <p><label>Title:</label><span id="i_tile">Title</span></p>
+      <p><label>Album:</label><span id="i_album">Album</span></p>
+      <p><label>Album Artist:</label><span id="i_albumartist">Album</span></p>
+      <p><label>Artist:</label><span id="i_artist">Artist</span></p>
+      <p><label>Track:</label><span id="i_track">TrackString</span></p>
+      <p><label>Genre:</label><span id="i_genre">Genre</span></p>
+      <p><label>Year:</label><span id="i_year">Year</span></p>
+      <p><label>Comment:</label><span id="i_Comment">Comment</span></p>
     </div>
 
     <section id="player" class="controls">
@@ -65,18 +65,29 @@
       </div>
 
       <div class="row toolbar">
+<<<<<<< HEAD
         
-          <button class="two columns ico-to-start" onclick="sendCommand('action','previous');"></button>
-          <button class="two columns ico-pause button-primary" id="playbtn" onclick="sendCommand('action','playpause');"></button>
-          <button class="two columns ico-stop" onclick="sendCommand('action','stop');"></button>
-          <button class="two columns ico-to-end" onclick="sendCommand('action','next');"></button>
+          <button class="two columns ico-to-start" onclick="sendCommand('act','previous');"></button>
+          <button class="two columns ico-pause button-primary" id="playbtn" onclick="sendCommand('act','playpause');"></button>
+          <button class="two columns ico-stop" onclick="sendCommand('act','stop');"></button>
+          <button class="two columns ico-to-end" onclick="sendCommand('act','next');"></button>
         
       <div class="row toolbar"></div>
+=======
+
+        <button class="two columns ico-to-start" onclick="sendCommand('action','previous');"></button>
+        <button class="two columns ico-pause button-primary" id="playbtn" onclick="sendCommand('action','playpause');"></button>
+        <button class="two columns ico-stop" onclick="sendCommand('action','stop');"></button>
+        <button class="two columns ico-to-end" onclick="sendCommand('action','next');"></button>
+      </div>
+      <div class="row toolbar">
+>>>>>>> 9c3a8581cb9a9f19781224fb683f166fc7801654
         <div class="six columns">
-           <button id="mute" class="one columns ico-volume-off"  onclick="toggleMute();"></button>
+          <button id="mute" class="one columns ico-volume-off" onclick="toggleMute();"></button>
           <input id="volume" class="four columns" type="range" min=0 max=256 value=256 step=1 oninput="setVolume();">
         </div>
       </div>
+
     </section>
     <br>
     <section id="playlist" class="content">
