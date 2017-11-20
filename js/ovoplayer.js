@@ -64,8 +64,11 @@ function webSocketConnect(server, port) {
       handle_message(msg)
     }
     socket.onclose = function() {
-      toast('Disconnected')
+      toast('Connection lost: retrying in 5 seconds')
       console.log('disconnected')
+      setTimeout(function() {
+        webSocketConnect(server, port)
+      }, 5000)
     }
   } catch (exception) {
     alert('<p>Error' + exception)
