@@ -32,10 +32,10 @@ function toast(message) {
 }
 
 function openImg(src) {
-  var newTab = window.open();
+  var newTab = window.open()
   newTab.document.body.innerHTML = '<img src="' + src + '">'
-    //  window.open(largeImgSrc, "title here", "width=400, height=300");
-  return false;
+    //  window.open(largeImgSrc, "title here", "width=400, height=300")
+  return false
 }
 
 function showinfo(message) {
@@ -311,7 +311,6 @@ function handle_message(msg) {
               byId('plstate').className = 'ico-pause'
               byId('playbtn').classList.add('ico-play')
               break
-
           }
           break
         case 'index':
@@ -324,11 +323,16 @@ function handle_message(msg) {
               // trele[message.param].scrollIntoView([])
           }
           break
+      }
+      break
+    case 'app':
+      switch (message.command) {
         case 'plchange':
           sendCommand('req', 'playlist')
           sendCommand('req', 'index')
           break
       }
+
       break
   }
 }
