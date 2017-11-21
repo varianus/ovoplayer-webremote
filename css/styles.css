@@ -1,13 +1,14 @@
 html,
 body {
-  
   height: 100%;
   margin: 0;
   background-color: #fff;
-  }  
+}
 
 @media (min-width: 550px) {
-  html { font-size: 75%; }
+  html {
+    font-size: 75%;
+  }
 }
 
 section {
@@ -69,13 +70,17 @@ header.h5 {
   z-index: 1;
 }
 
-
 .selected {
   background: rgb(29, 226, 95)
 }
 
-#songinfo.show,  #toast.show {
+#songinfo.show,
+#toast.show {
   visibility: visible;
+}
+
+#pl-data tr:hover {
+  text-decoration: underline;
 }
 
 nav ul {
@@ -108,5 +113,5 @@ nav ul {
 }
 
 .bordered {
-  border: 5px outset; 
+  border: 5px outset;
 }

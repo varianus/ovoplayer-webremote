@@ -65,13 +65,13 @@
       </div>
 
       <div class="row toolbar">
-        
-          <button class="two columns ico-to-start" onclick="sendCommand('act','previous');"></button>
-          <button class="two columns ico-pause button-primary" id="playbtn" onclick="sendCommand('act','playpause');"></button>
-          <button class="two columns ico-stop" onclick="sendCommand('act','stop');"></button>
-          <button class="two columns ico-to-end" onclick="sendCommand('act','next');"></button>
-        
-      <div class="row toolbar"></div>
+
+        <button class="two columns ico-to-start" onclick="sendCommand('act','previous');"></button>
+        <button class="two columns ico-pause button-primary" id="playbtn" onclick="sendCommand('act','playpause');"></button>
+        <button class="two columns ico-stop" onclick="sendCommand('act','stop');"></button>
+        <button class="two columns ico-to-end" onclick="sendCommand('act','next');"></button>
+
+        <div class="row toolbar"></div>
         <div class="six columns">
           <button id="mute" class="one columns ico-volume-off" onclick="toggleMute();"></button>
           <input id="volume" class="four columns" type="range" min=0 max=256 value=256 step=1 oninput="setVolume();">
@@ -83,12 +83,12 @@
     <section id="playlist" class="content">
       <table id="tabpl">
         <thead>
-            <tr class="tabheader">
-              <th>Title</th>
-              <th>Artist</th>
-              <th>Duration</th>
-              <th>&nbsp;</th>
-            </tr>
+          <tr class="tabheader">
+            <th>Title</th>
+            <th>Artist</th>
+            <th>Duration</th>
+            <th>&nbsp;</th>
+          </tr>
         </thead>
         <tbody id="pl-data">
         </tbody>
