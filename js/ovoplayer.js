@@ -77,7 +77,7 @@ function webSocketConnect(server, port) {
 
 function sendCommand(category, command, params) {
   var msg = category + ':' + command
-  if (params)
+  if (!(params == null))
     msg += '=' + params
 
   msg = encodeOvoLength(msg.length) + msg
@@ -280,18 +280,17 @@ function handle_message(msg) {
             c2.innerText = msToTime(playlist[i].Duration)
             var ci = row.insertCell(3)
             ci.innerHTML = '<i class="ico-info-circled"></i>'
-
+            c0.onclick = (function() {
+              return function() {
+                sendCommand('act', 'play', this.parentElement.rowIndex - 1)
+              }
+            })()
             ci.onclick = (function() {
-                return function() {
-                  sendCommand('req', 'meta', this.parentElement.rowIndex)
-                  showinfo()
-                }
-              })()
-              /*     row.onclick = (function () {
-                    return function () {
-                      sendCommand('action', 'play', this.rowIndex - 1)
-                    }
-                  })()*/
+              return function() {
+                sendCommand('req', 'meta', this.parentElement.rowIndex)
+                showinfo()
+              }
+            })()
           }
           break
         case 'state':
