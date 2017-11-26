@@ -356,6 +356,10 @@ function setVolume() {
   sendCommand('act', 'vol', byId('volume').value)
 }
 
+function loopChange(looping) {
+  sendCommand('act', 'loop', looping.value)
+}
+
 function seek() {
   sendCommand('act', 'seek', byId('songpos').value)
 }
