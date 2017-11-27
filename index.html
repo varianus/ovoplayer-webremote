@@ -76,15 +76,12 @@
           <input id="volume" class="four columns" type="range" min=0 max=256 value=256 step=1 oninput="setVolume();">
         </div>
         <div class="dropdown">
-          <button id=looping class="one column big ico-loop "></button>
-          <div class="dropdown-content">
-
+          <button id="looping" class="one column big ico-loop "></button>
+          <div id="loopctrl" class="dropdown-content">
             <input type="radio" name="loop" value="0" onclick="loopChange(this)">None</input><br/>
             <input type="radio" name="loop" value="1" onclick="loopChange(this)">Track</input><br/>
             <input type="radio" name="loop" value="2" onclick="loopChange(this)">Album</input><br/>
             <input type="radio" name="loop" value="3" onclick="loopChange(this)">Playlist</input><br/>
-
-
           </div>
         </div>
 

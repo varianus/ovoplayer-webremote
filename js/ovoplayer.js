@@ -97,6 +97,7 @@ function connected() {
   sendCommand('req', 'mute')
   sendCommand('req', 'playlist')
   sendCommand('req', 'index')
+  sendCommand('req', 'loop')
 }
 
 function get_appropriate_w_url(server, port) {
@@ -311,6 +312,16 @@ function handle_message(msg) {
               byId('playbtn').classList.add('ico-play')
               break
           }
+          break
+        case 'loop':
+          var radios = byId('loopctrl').getElementsByTagName('input')
+          for (var i = 0; i < radios.length; i++) {
+            if ((radios[i].type === 'radio') && (radios[i].value == message.param))
+              radios[i].checked = true
+            else
+              radios[i].checked = false
+          }
+
           break
         case 'index':
           var trele = byId('tabpl').getElementsByTagName('TR')
