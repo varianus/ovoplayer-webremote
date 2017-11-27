@@ -48,6 +48,10 @@ header.h5 {
   max-width: 200px;
 }
 
+#volume {
+  margin: .5em;
+}
+
 .center {
   text-align: center;
 }

@@ -70,8 +70,8 @@
         <button class="two columns big ico-pause button-primary" id="playbtn" onclick="sendCommand('act','playpause');"></button>
         <button class="two columns big ico-stop" onclick="sendCommand('act','stop');"></button>
         <button class="two columns big ico-to-end" onclick="sendCommand('act','next');"></button>
-
-        <div class="row toolbar"></div>
+      </div>
+      <div class="row toolbar">
         <div class="six columns">
           <button id="mute" class="one column big ico-volume-off" onclick="toggleMute();"></button>
           <input id="volume" class="four columns" type="range" min=0 max=256 value=256 step=1 oninput="setVolume();">
@@ -85,8 +85,8 @@
             <input type="radio" name="loop" value="3" onclick="loopChange(this)">Playlist<br/>
           </div>
         </div>
-
       </div>
+
 
     </section>
     <br>
