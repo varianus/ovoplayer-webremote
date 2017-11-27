@@ -2,6 +2,7 @@
 <html>
 
 <head>
+  <title>Ovoplayer Web Remote</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="robots" content="noindex, nofollow">
@@ -56,7 +57,7 @@
       </div>
       <div class="row">
         <div class="nine columns">
-          <input id="songpos" class="u-full-width" type="range" min=0 max=600000 value=23000 step=1000 oninput="seek();"></input>
+          <input id="songpos" class="u-full-width" type="range" min=0 max=600000 value=23000 step=1000 oninput="seek();">
         </div>
         <div class="three columns">
           <span id="textPos">0:00</span>/
@@ -78,10 +79,10 @@
         <div class="dropdown">
           <button id="looping" class="one column big ico-loop "></button>
           <div id="loopctrl" class="dropdown-content">
-            <input type="radio" name="loop" value="0" onclick="loopChange(this)">None</input><br/>
-            <input type="radio" name="loop" value="1" onclick="loopChange(this)">Track</input><br/>
-            <input type="radio" name="loop" value="2" onclick="loopChange(this)">Album</input><br/>
-            <input type="radio" name="loop" value="3" onclick="loopChange(this)">Playlist</input><br/>
+            <input type="radio" name="loop" value="0" onclick="loopChange(this)">None<br/>
+            <input type="radio" name="loop" value="1" onclick="loopChange(this)">Track<br/>
+            <input type="radio" name="loop" value="2" onclick="loopChange(this)">Album<br/>
+            <input type="radio" name="loop" value="3" onclick="loopChange(this)">Playlist<br/>
           </div>
         </div>
 
@@ -105,7 +106,7 @@
 
     </section>
     <footer>
-      <center>by Marco Caselli</center>
+      <span class="center">by Marco Caselli</span>
     </footer>
   </div>
 </body>

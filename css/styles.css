@@ -44,7 +44,12 @@ header.h5 {
 }
 
 #player img {
-  width: 200px;
+  min-width: 200px;
+  max-width: 200px;
+}
+
+#center {
+  text-align: center;
 }
 
 #toast {
@@ -126,7 +131,8 @@ nav ul {
     flex: 0 1 40px;
   }
   #player img {
-    width: 100px;
+    min-width: 100px;
+    max-width: 100px;
   }
 }
 
