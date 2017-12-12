@@ -39,17 +39,18 @@
     </div>
 
     <section id="player" class="controls">
-      <header>
-        <h5>
-          <i id="plstate" class="ico-music"></i>
-          <span id="title">Title</span>
-        </h5>
-      </header>
       <div class="row">
         <a href="#">
           <img src="asset/nocover.png" alt="Cover" id="cover" class="two columns" onclick="openImg(this.src);">
         </a>
         <div class="seven columns">
+          <header>
+            <h5>
+              <i id="plstate" class="ico-music"></i>
+              <span id="title">Title</span>
+            </h5>
+          </header>
+          <br>
           <span id="artist">Artist</span>
           <br>
           <span id="album">Album</span>
@@ -66,18 +67,14 @@
       </div>
 
       <div class="row toolbar ">
-        <button class="two columns big ico-to-start" onclick="sendCommand('act','previous');"></button>
-        <button class="two columns big ico-pause button-primary" id="playbtn" onclick="sendCommand('act','playpause');"></button>
-        <button class="two columns big ico-stop" onclick="sendCommand('act','stop');"></button>
-        <button class="two columns big ico-to-end" onclick="sendCommand('act','next');"></button>
+        <button class="two  big ico-to-start" onclick="sendCommand('act','previous');"></button>
+        <button class="two  big ico-pause button-primary" id="playbtn" onclick="sendCommand('act','playpause');"></button>
+        <button class="two  big ico-stop" onclick="sendCommand('act','stop');"></button>
+        <button class="two  big ico-to-end" onclick="sendCommand('act','next');"></button>
       </div>
       <div class="row toolbar">
-        <div class="six columns">
-          <button id="mute" class="one column big ico-volume-off" onclick="toggleMute();"></button>
-          <input id="volume" class="four columns" type="range" min=0 max=256 value=256 step=1 oninput="setVolume();">
-        </div>
         <div class="dropdown">
-          <button id="looping" class="one column big ico-loop "></button>
+          <button id="looping" class="one  big ico-loop "></button>
           <div id="loopctrl" class="dropdown-content">
             <input type="radio" name="loop" value="0" onclick="loopChange(this)">None<br/>
             <input type="radio" name="loop" value="1" onclick="loopChange(this)">Track<br/>
@@ -85,6 +82,9 @@
             <input type="radio" name="loop" value="3" onclick="loopChange(this)">Playlist<br/>
           </div>
         </div>
+
+        <button id="mute" class="one  big ico-volume-off" onclick="toggleMute();"></button>
+        <input id="volume" class="three " type="range" min=0 max=256 value=256 step=1 oninput="setVolume();">
       </div>
 
 
