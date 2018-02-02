@@ -74,7 +74,8 @@ header.h5 {
   font-size: 1.7rem;
 }
 
-#songinfo {
+#songinfo,
+#setup {
   visibility: hidden;
   min-width: 30rem;
   background-color: #555;

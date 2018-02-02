@@ -38,13 +38,13 @@ function openImg(src) {
   return false
 }
 
-function showinfo(message) {
-  var x = byId('songinfo')
+function showbox(id) {
+  var x = byId(id)
   x.className = 'show'
 }
 
-function closeinfo() {
-  var x = byId('songinfo')
+function closebox(id) {
+  var x = byId(id)
   x.className = x.className.replace('show', '')
 }
 
@@ -289,7 +289,7 @@ function handle_message(msg) {
             ci.onclick = (function() {
               return function() {
                 sendCommand('req', 'meta', this.parentElement.rowIndex)
-                showinfo()
+                showbox('songinfo')
               }
             })()
           }

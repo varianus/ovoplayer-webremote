@@ -26,8 +26,11 @@
       </nav>
     </header>
     <div id="toast">...</div>
+    <div id="setup" class="container box">
+      <button class="button-primary u-pull-right big" onclick="closebox('setup');">X</button><br>
+    </div>
     <div id="songinfo" class="container box">
-      <button class="button-primary u-pull-right big" onclick="closeinfo();">X</button><br>
+      <button class="button-primary u-pull-right big" onclick="closebox('songinfo');">X</button><br>
       <p><label>Title:</label><span id="i_tile">Title</span></p>
       <p><label>Album:</label><span id="i_album">Album</span></p>
       <p><label>Album Artist:</label><span id="i_albumartist">Album</span></p>
@@ -47,7 +50,7 @@
           <header>
             <h5>
               <i id="plstate" class="ico-music"></i>
-              <a href="#" id="title" onclick="sendCommand('req', 'meta');showinfo()">Title</a>
+              <a href="#" id="title" onclick="sendCommand('req', 'meta');showbox('songinfo')">Title</a>
             </h5>
           </header>
           <br>
