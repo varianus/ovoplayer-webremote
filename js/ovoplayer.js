@@ -1,7 +1,21 @@
 function init() {
+  var params = loadParams()
+  webSocketConnect(params.server, params.port)
+}
+
+function saveParams() {
   if (localStorage) {
-    var server = localStorage.getItem('server')
-    var port = localStorage.getItem('port')
+    localStorage.setItem('server', byId('server').value)
+    localStorage.setItem('port', byId('port').value)
+    init()
+  }
+
+}
+
+function loadParams() {
+  if (localStorage) {
+    server = localStorage.getItem('server')
+    port = localStorage.getItem('port')
   }
 
   if (!server) {
@@ -15,7 +29,11 @@ function init() {
     localStorage.setItem('server', server)
     localStorage.setItem('port', port)
   }
-  webSocketConnect(server, port)
+
+  byId('server').value = server
+  byId('port').value = port
+  return { server, port }
+
 }
 
 function byId(id) {
@@ -25,9 +43,9 @@ function byId(id) {
 function toast(message) {
   var x = byId('toast')
   x.innerText = message
-  x.className = 'show'
+  x.classList.add('show')
   setTimeout(function() {
-    x.className = x.className.replace('show', '')
+    x.classList.remove('show')
   }, 4000)
 }
 
@@ -40,7 +58,7 @@ function openImg(src) {
 
 function showbox(id) {
   var x = byId(id)
-  x.className = 'show'
+  x.classList.add('show')
 }
 
 function closebox(id) {

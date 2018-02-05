@@ -59,23 +59,15 @@ header.h5 {
 }
 
 #toast {
-  visibility: hidden;
   min-width: 25rem;
   margin-left: -12.5rem;
-  background-color: #555;
-  color: #fff;
   text-align: center;
-  border-radius: .2rem;
-  padding: 1.6rem;
-  position: fixed;
-  z-index: 1;
   right: 3rem;
   top: 3rem;
   font-size: 1.7rem;
 }
 
-#songinfo,
-#setup {
+.cdialog {
   visibility: hidden;
   min-width: 30rem;
   background-color: #555;
@@ -86,13 +78,12 @@ header.h5 {
   z-index: 1;
 }
 
-.selected {
-  background: rgb(29, 226, 95)
+.cdialog.show {
+  visibility: visible;
 }
 
-#songinfo.show,
-#toast.show {
-  visibility: visible;
+.selected {
+  background: rgb(29, 226, 95)
 }
 
 #pl-data tr:hover {
