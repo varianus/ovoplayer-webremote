@@ -5,6 +5,7 @@
     version     = "1.0.0" >
 
   <name>Ovoplayer remote</name>
+   <icon src="asset/logo.png" />
 
   <description>
       A simple remote for Ovoplayer
