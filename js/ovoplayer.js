@@ -39,7 +39,7 @@ function loadParams() {
 
   byId('server').value = server
   byId('port').value = port
-  return { server, port }
+  return { server: server, port: port }
 
 }
 
