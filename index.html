@@ -9,8 +9,15 @@
   <link rel="stylesheet" type="text/css" href="css/normalize.css">
   <link rel="stylesheet" type="text/css" href="css/skeleton.css">
   <link rel="stylesheet" type="text/css" href="css/styles.css">
+  <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
   <link rel="stylesheet" type="text/css" href="css/ovoplayer-font.css">
   <script src="js/ovoplayer.js"></script>
+  <script type="text/javascript" charset="utf-8">
+    function onLoad() {
+      document.addEventListener("deviceready", init, false);
+    };
+  </Script>
+
 </head>
 
 <body onload="init();">
@@ -27,7 +34,7 @@
     </header>
     <div id="toast" class="cdialog">...</div>
     <div id="setup" class="cdialog ">
-      <button class="button-primary u-pull-right big" onclick="closebox('setup');">X</button><br>
+      <button id="closesetup" class="button-primary u-pull-right big">X</button><br>
       <form>
         <fieldset>
 
@@ -50,7 +57,7 @@
       </form>
     </div>
     <div id="songinfo" class="cdialog">
-      <button class="button-primary u-pull-right big" onclick="closebox('songinfo');">X</button><br>
+      <button id="closeinfo" class="button-primary u-pull-right big" onclick="closebox('songinfo');">X</button><br>
       <p><label>Title:</label><span id="i_tile">Title</span></p>
       <p><label>Album:</label><span id="i_album">Album</span></p>
       <p><label>Album Artist:</label><span id="i_albumartist">Album</span></p>
@@ -94,7 +101,7 @@
         <button class="two  big ico-pause button-primary" id="playbtn" onclick="sendCommand('act','playpause');"></button>
         <button class="two  big ico-stop" onclick="sendCommand('act','stop');"></button>
         <button class="two  big ico-to-end" onclick="sendCommand('act','next');"></button>
-        <button class="two  big ico-cog" onclick="showbox('setup');"></button>
+        <button class="two  big ico-cog" id="btnsetup"></button>
       </div>
       <div class="row toolbar">
         <div class="dropdown">

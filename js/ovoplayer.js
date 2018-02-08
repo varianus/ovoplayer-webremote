@@ -1,5 +1,13 @@
 function init() {
   var params = loadParams()
+  byId('btnsetup').addEventListener('click', function() {
+    showbox('setup')
+  }, false)
+  byId('closesetup').addEventListener('click', function() { closebox('setup') }, false)
+  byId('closeinfo').addEventListener('click', function() { closebox('songinfo') }, false)
+  byId('cover').addEventListener('click', function() { openImg(byId('cover').src) }, false)
+  byId('confirm').addEventListener('click', function() { saveParams() }, false)
+
   webSocketConnect(params.server, params.port)
 }
 
@@ -9,7 +17,6 @@ function saveParams() {
     localStorage.setItem('port', byId('port').value)
     init()
   }
-
 }
 
 function loadParams() {
@@ -63,7 +70,7 @@ function showbox(id) {
 
 function closebox(id) {
   var x = byId(id)
-  x.className = x.className.replace('show', '')
+  x.classList.remove('show')
 }
 
 function webSocketConnect(server, port) {
