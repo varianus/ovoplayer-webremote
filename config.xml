@@ -5,8 +5,8 @@
     version     = "1.0.0" >
 
   <name>Ovoplayer remote</name>
-   <icon src="asset/logo.png" />
-
+  <icon src="asset/logo.png" />
+  <platform name="android" />
   <description>
       A simple remote for Ovoplayer
   </description>
