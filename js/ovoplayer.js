@@ -295,7 +295,7 @@ function handle_message(msg) {
         case 'playlist':
           var playlist = decodePlayList(message.param)
           var tableObj = byId('pl-data')
-          tableObj.innerText = ''
+          tableObj.innerHTML = ''
           for (var i = 0; i < playlist.length; i++) {
             var row = tableObj.insertRow(-1)
             var c0 = row.insertCell(0)
