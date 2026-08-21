@@ -1,12 +1,13 @@
 function init() {
   var params = loadParams()
-  webSocketConnect(params.server, params.port)
+  webSocketConnect(params.server, params.port, params.useSSL)
 }
 
 function saveParams() {
   if (localStorage) {
     localStorage.setItem('server', byId('server').value)
     localStorage.setItem('port', byId('port').value)
+    localStorage.setItem('useSSL', byId('SSL').checked)
     init()
   }
 
@@ -16,6 +17,7 @@ function loadParams() {
   if (localStorage) {
     server = localStorage.getItem('server')
     port = localStorage.getItem('port')
+    useSSL = localStorage.getItem('useSSL')
   }
 
   if (!server) {
@@ -25,14 +27,23 @@ function loadParams() {
   if (!port) {
     port = '6860'
   }
+
+  if (!useSSL) {
+    useSSL = false
+  } else {
+    useSSL = useSSL === 'true'
+  }
+
   if (localStorage) {
     localStorage.setItem('server', server)
     localStorage.setItem('port', port)
+    localStorage.setItem('useSSL', useSSL)
   }
 
   byId('server').value = server
   byId('port').value = port
-  return { server, port }
+  byId('SSL').checked = useSSL
+  return { server, port, useSSL }
 
 }
 
@@ -66,11 +77,11 @@ function closebox(id) {
   x.className = x.className.replace('show', '')
 }
 
-function webSocketConnect(server, port) {
+function webSocketConnect(server, port, useSSL) {
   if (typeof MozWebSocket != 'undefined') {
-    socket = new MozWebSocket(get_appropriate_w_url(server, port))
+    socket = new MozWebSocket(get_appropriate_w_url(server, port, useSSL))
   } else {
-    socket = new WebSocket(get_appropriate_w_url(server, port))
+    socket = new WebSocket(get_appropriate_w_url(server, port, useSSL))
   }
 
   try {
@@ -85,7 +96,8 @@ function webSocketConnect(server, port) {
       toast('Connection lost: retrying in 5 seconds')
       console.log('disconnected')
       setTimeout(function() {
-        webSocketConnect(server, port)
+        var params = loadParams()
+        webSocketConnect(params.server, params.port, params.useSSL)
       }, 5000)
     }
   } catch (exception) {
@@ -118,8 +130,9 @@ function connected() {
   sendCommand('req', 'loop')
 }
 
-function get_appropriate_w_url(server, port) {
-  return 'ws://' + server + ':' + port + '/player'
+function get_appropriate_w_url(server, port, useSSL) {
+  var protocol = useSSL ? 'wss://' : 'ws://'
+  return protocol + server + ':' + port + '/player'
 }
 
 function decodeOvoLength(base64) {

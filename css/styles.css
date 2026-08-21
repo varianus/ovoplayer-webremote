@@ -112,6 +112,10 @@ nav ul {
   display: inline-block;
 }
 
+.inline-label{
+  display:inline-block;
+}
+
 @media (min-width: 35rem) {
   .box {
     display: flex;

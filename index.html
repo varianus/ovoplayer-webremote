@@ -30,19 +30,15 @@
       <button class="button-primary u-pull-right big" onclick="closebox('setup');">X</button><br>
       <form>
         <fieldset>
-
-          <!-- Form Name -->
           <legend>Setup</legend>
-
-          <!-- Text input-->
           <label for="server">Host</label>
           <input id="server" placeholder="127.0.0.1" class="form-control input-md" required="" type="text">
 
-          <!-- Text input-->
           <label for="port">Port</label>
           <input id="port" name="port" placeholder="6860" class="form-control input-md" required="" type="text">
 
-          <!-- Button -->
+          <label class="inline-label"> <input id="SSL" type="checkbox"> Use SSL encryption </label>
+
           <label for="confirm"></label>
           <button id="confirm" class="button-primary big" onclick='saveParams()'>OK</button>
 
