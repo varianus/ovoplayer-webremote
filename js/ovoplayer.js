@@ -2,9 +2,11 @@
 
 var socket;
 var elSongPos, elTextPos, elTitle, elArtist, elAlbum, elCover, plTableBody, tabPl, elVolume, elMute, elPlayBtn, elLoopCtrl;
+var elConnectionDot, elStatusText, elVolumeLabel, elPlaylistCount;
 var posPending = null;
 var posFrameRequested = false;
 var volumeTimer = null;
+var connectionStatus = 'disconnected'; // 'connected', 'connecting', 'disconnected'
 
 function init() {
   var params = loadParams();
@@ -22,6 +24,10 @@ function init() {
   elMute = byId('mute');
   elPlayBtn = byId('playbtn');
   elLoopCtrl = byId('loopctrl');
+  elConnectionDot = byId('connectionDot');
+  elStatusText = byId('statusText');
+  elVolumeLabel = byId('volumeLabel');
+  elPlaylistCount = byId('playlistCount');
 
   // event delegation for playlist clicks
   if (tabPl) {
@@ -39,6 +45,7 @@ function init() {
     });
   }
 
+  updateConnectionStatus('connecting');
   webSocketConnect(params.server, params.port, params.useSSL);
 }
 
@@ -47,7 +54,42 @@ function saveParams() {
     localStorage.setItem('server', byId('server').value);
     localStorage.setItem('port', byId('port').value);
     localStorage.setItem('useSSL', byId('SSL').checked);
+    closebox('setup');
+    updateConnectionStatus('connecting');
     init();
+  }
+}
+
+function testConnection() {
+  var server = byId('server').value;
+  var port = byId('port').value;
+  var useSSL = byId('SSL').checked;
+  
+  toast('Testing connection...');
+  
+  // Create a temporary WebSocket to test connection
+  try {
+    var testSocket = new WebSocket(
+      (useSSL ? 'wss://' : 'ws://') + server + ':' + port + '/player'
+    );
+    
+    var testTimeout = setTimeout(function() {
+      testSocket.close();
+      toast('Connection test timeout');
+    }, 3000);
+    
+    testSocket.onopen = function() {
+      clearTimeout(testTimeout);
+      testSocket.close();
+      toast('✓ Connection successful!');
+    };
+    
+    testSocket.onerror = function() {
+      clearTimeout(testTimeout);
+      toast('✗ Connection failed');
+    };
+  } catch (e) {
+    toast('Connection error: ' + e.message);
   }
 }
 
@@ -96,6 +138,28 @@ function openImg(src) {
 function showbox(id) { var x = byId(id); if (x) x.classList.add('show'); }
 function closebox(id) { var x = byId(id); if (x) x.className = x.className.replace('show', ''); }
 
+function updateConnectionStatus(status) {
+  connectionStatus = status;
+  
+  if (!elConnectionDot || !elStatusText) return;
+  
+  elConnectionDot.classList.remove('connected', 'disconnected');
+  
+  switch(status) {
+    case 'connected':
+      elConnectionDot.classList.add('connected');
+      elStatusText.textContent = 'Connected';
+      break;
+    case 'connecting':
+      elStatusText.textContent = 'Connecting...';
+      break;
+    case 'disconnected':
+      elConnectionDot.classList.add('disconnected');
+      elStatusText.textContent = 'Disconnected';
+      break;
+  }
+}
+
 function webSocketConnect(server, port, useSSL) {
   if (typeof MozWebSocket != 'undefined') {
     socket = new MozWebSocket(get_appropriate_w_url(server, port, useSSL));
@@ -104,18 +168,29 @@ function webSocketConnect(server, port, useSSL) {
   }
 
   try {
-    socket.onopen = function() { toast('Connected'); connected(); };
+    socket.onopen = function() { 
+      updateConnectionStatus('connected');
+      toast('✓ Connected');
+      connected();
+    };
     socket.onmessage = function(msg) { handle_message(msg); };
     socket.onclose = function() {
-      toast('Connection lost: retrying in 5 seconds');
+      updateConnectionStatus('disconnected');
+      toast('✗ Connection lost: retrying in 5 seconds');
       console.log('disconnected');
       setTimeout(function() {
         var params = loadParams();
+        updateConnectionStatus('connecting');
         webSocketConnect(params.server, params.port, params.useSSL);
       }, 5000);
     };
+    socket.onerror = function() {
+      updateConnectionStatus('disconnected');
+      toast('✗ Connection error');
+    };
   } catch (exception) {
-    alert('<p>Error' + exception);
+    updateConnectionStatus('disconnected');
+    alert('Error: ' + exception);
   }
 }
 
@@ -247,7 +322,10 @@ function handle_message(msg) {
           schedulePosUpdate(message.param);
           break;
         case 'vol':
-          if (elVolume) elVolume.value = message.param;
+          if (elVolume) {
+            elVolume.value = message.param;
+            updateVolumeLabel();
+          }
           break;
         case 'mute':
           toggleMute(message.param);
@@ -295,22 +373,28 @@ function handle_message(msg) {
             frag.appendChild(tr);
           }
           plTableBody.appendChild(frag);
+          
+          // Update playlist count
+          if (elPlaylistCount) {
+            elPlaylistCount.textContent = '(' + playlist.length + ' tracks)';
+          }
           break;
         case 'state':
           if (elPlayBtn) elPlayBtn.classList.remove('ico-play', 'ico-pause');
+          var plstate = byId('plstate');
           switch (message.param) {
             case '0':
-              if (byId('plstate')) byId('plstate').className = 'ico-stop';
+              if (plstate) plstate.className = 'ico-music state-icon';
               if (elPlayBtn) elPlayBtn.classList.add('ico-play');
               break;
             case '1':
-              if (byId('plstate')) byId('plstate').className = 'ico-play';
+              if (plstate) plstate.className = 'ico-play state-icon playing';
               if (elPlayBtn) elPlayBtn.classList.add('ico-pause');
               sendCommand('req', 'meta');
               sendCommand('req', 'coverimg');
               break;
             case '2':
-              if (byId('plstate')) byId('plstate').className = 'ico-pause';
+              if (plstate) plstate.className = 'ico-pause state-icon';
               if (elPlayBtn) elPlayBtn.classList.add('ico-play');
               break;
           }
@@ -328,7 +412,7 @@ function handle_message(msg) {
           if (!plTableBody) break;
           var rows = plTableBody.getElementsByTagName('tr');
           for (var j = 0; j < rows.length; j++) rows[j].classList.remove('selected');
-          if (rows.length > 0 && message.param >= 0 && message.param < rows.length) rows[message.param-1].classList.add('selected');
+          if (rows.length > 0 && message.param > 0 && message.param <= rows.length) rows[message.param-1].classList.add('selected');
           break;
       }
       break;
@@ -354,8 +438,15 @@ function toggleMute(gui) {
   }
 }
 
+function updateVolumeLabel() {
+  if (!elVolume || !elVolumeLabel) return;
+  var percent = Math.round((elVolume.value / 256) * 100);
+  elVolumeLabel.textContent = percent + '%';
+}
+
 function setVolume() {
   var val = elVolume ? elVolume.value : (byId('volume') ? byId('volume').value : null);
+  updateVolumeLabel();
   clearTimeout(volumeTimer);
   volumeTimer = setTimeout(function() { if (val !== null) sendCommand('act', 'vol', val); }, 100);
 }
