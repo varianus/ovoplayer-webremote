@@ -1,8 +1,29 @@
+/* Color scheme using CSS custom properties for easy theme switching */
+:root {
+  --color-bg-primary: #1a1a1a;
+  --color-bg-secondary: #252525;
+  --color-bg-tertiary: #2a2a2a;
+  --color-text-primary: #e0e0e0;
+  --color-text-secondary: #888;
+  --color-text-muted: #666;
+  --color-accent: #00d084;
+  --color-accent-light: #00e8a0;
+  --color-border: #333;
+  --color-hover: #444;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.8);
+  --radius-sm: 6px;
+  --radius-md: 12px;
+}
+
 html,
 body {
   height: 100%;
   margin: 0;
-  background-color: #fff;
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 @media (min-width: 35rem) {
@@ -12,20 +33,41 @@ body {
 }
 
 section {
-  box-shadow: 0 .2rem .5rem 0 rgba(0, 0, 0, 0.16), 0 .2rem 1rem 0 rgba(0, 0, 0, 0.12)
+  box-shadow: var(--shadow-md);
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+  border-top: 1px solid var(--color-border);
 }
 
 .button,
 button,
 input[type="submit"],
 input[type="reset"],
-input[type="button"] big {
+input[type="button"],
+button.big {
   font-size: large;
   padding: 0 1rem;
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.button:hover,
+button:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+input[type="button"]:hover {
+  background-color: var(--color-hover);
+  transform: scale(1.05);
 }
 
 #tablepl td {
   text-overflow: ellipsis;
+  padding: 12px;
+  color: var(--color-text-primary);
 }
 
 #tablepl td:hover {
@@ -40,18 +82,49 @@ section:after {
 }
 
 header.h5 {
-  color: #000!important;
-  background-color: #f1f1f1!important
+  color: var(--color-text-primary) !important;
+  background-color: var(--color-bg-secondary) !important
 }
 
 #player img {
   min-width: 20rem;
   max-width: 20rem;
+  border-radius: var(--radius-md);
+  box-shadow: 0 20px 40px rgba(0, 208, 132, 0.2), 0 0 60px rgba(0, 208, 132, 0.1);
+  border: 2px solid var(--color-accent);
 }
 
 #volume {
   margin: 0;
   width: 9.8rem;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--color-border);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+#volume::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  background: var(--color-accent);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 208, 132, 0.4);
+}
+
+#volume::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: var(--color-accent);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 208, 132, 0.4);
 }
 
 .center {
@@ -65,29 +138,46 @@ header.h5 {
   right: 3rem;
   top: 3rem;
   font-size: 1.7rem;
+  background-color: var(--color-accent);
+  color: #000;
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  box-shadow: var(--shadow-lg);
+  font-weight: 600;
 }
 
 .cdialog {
   visibility: hidden;
   min-width: 30rem;
-  background-color: #555;
-  color: #fff;
-  border-radius: .2rem;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  border-radius: var(--radius-md);
   padding: 1.6rem;
   position: fixed;
   z-index: 1;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--color-border);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  transform: scale(0.95);
+  transition: all 0.3s ease;
 }
 
 .cdialog.show {
   visibility: visible;
+  opacity: 1;
+  transform: scale(1);
 }
 
 .selected {
-  background: rgb(29, 226, 95)
+  background: rgba(0, 208, 132, 0.15);
+  border-left: 3px solid var(--color-accent);
 }
 
 #pl-data tr:hover {
-  text-decoration: underline;
+  background-color: var(--color-bg-tertiary);
+  transform: translateX(4px);
+  transition: all 0.2s ease;
 }
 
 nav ul {
@@ -102,18 +192,39 @@ nav ul {
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color: #f9f9f9;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-primary);
   min-width: 16rem;
-  box-shadow: 0 .8rem 1.6rem 0 rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-md);
   z-index: 1;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 8px 0;
+}
+
+.dropdown-content input {
+  color: var(--color-text-primary);
+  accent-color: var(--color-accent);
+  margin: 8px 12px;
+}
+
+.dropdown-content label {
+  color: var(--color-text-primary);
+  margin-left: 8px;
 }
 
 .dropdown:hover .dropdown-content {
   display: inline-block;
 }
 
-.inline-label{
-  display:inline-block;
+.inline-label {
+  display: inline-block;
+  color: var(--color-text-primary);
+}
+
+.inline-label input {
+  accent-color: var(--color-accent);
+  margin-right: 8px;
 }
 
 @media (min-width: 35rem) {
@@ -140,8 +251,73 @@ nav ul {
 
 .toolbar {
   margin: .1rem;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
 }
 
 .bordered {
-  border: .5rem outset;
+  border: .5rem outset var(--color-accent);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-accent);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent-light);
+}
+
+/* Form elements */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+textarea,
+select {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(0, 208, 132, 0.1);
+}
+
+/* Label styling */
+label {
+  color: var(--color-text-primary);
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+fieldset {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+}
+
+legend {
+  color: var(--color-accent);
+  font-weight: 600;
+  padding: 0 8px;
 }
