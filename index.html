@@ -10,7 +10,7 @@
   <link rel="stylesheet" type="text/css" href="css/skeleton.css">
   <link rel="stylesheet" type="text/css" href="css/styles.css">
   <link rel="stylesheet" type="text/css" href="css/ovoplayer-font.css">
-  <script src="js/ovoplayer.js"></script>
+  <script src="js/ovoplayer.js" defer></script>
 </head>
 
 <body onload="init();">
@@ -60,7 +60,7 @@
     <section id="player" class="controls">
       <div class="row">
         <a href="#">
-          <img src="asset/nocover.png" alt="Cover" id="cover" class="two columns" onclick="openImg(this.src);">
+          <img src="asset/nocover.png" loading="lazy" alt="Cover" id="cover" class="two columns" onclick="openImg(this.src);">
         </a>
         <div class="seven columns">
           <header>
