@@ -10,6 +10,9 @@
   --color-accent-light: #00e8a0;
   --color-border: #333;
   --color-hover: #444;
+  --color-connected: #00d084;
+  --color-connecting: #ffa500;
+  --color-disconnected: #ff4444;
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
   --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
   --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.8);
@@ -86,15 +89,21 @@ header.h5 {
   background-color: var(--color-bg-secondary) !important
 }
 
-#player img {
+.album-cover {
   min-width: 20rem;
   max-width: 20rem;
   border-radius: var(--radius-md);
   box-shadow: 0 20px 40px rgba(0, 208, 132, 0.2), 0 0 60px rgba(0, 208, 132, 0.1);
   border: 2px solid var(--color-accent);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-#volume {
+.album-cover:hover {
+  transform: scale(1.02);
+  box-shadow: 0 25px 50px rgba(0, 208, 132, 0.3), 0 0 80px rgba(0, 208, 132, 0.15);
+}
+
+.volume-slider {
   margin: 0;
   width: 9.8rem;
   height: 4px;
@@ -106,7 +115,7 @@ header.h5 {
   cursor: pointer;
 }
 
-#volume::-webkit-slider-thumb {
+.volume-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 12px;
@@ -115,9 +124,16 @@ header.h5 {
   border-radius: 50%;
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(0, 208, 132, 0.4);
+  transition: all 0.2s ease;
 }
 
-#volume::-moz-range-thumb {
+.volume-slider::-webkit-slider-thumb:hover {
+  width: 16px;
+  height: 16px;
+  box-shadow: 0 4px 12px rgba(0, 208, 132, 0.6);
+}
+
+.volume-slider::-moz-range-thumb {
   width: 12px;
   height: 12px;
   background: var(--color-accent);
@@ -125,25 +141,123 @@ header.h5 {
   cursor: pointer;
   border: none;
   box-shadow: 0 2px 6px rgba(0, 208, 132, 0.4);
+  transition: all 0.2s ease;
+}
+
+.volume-slider::-moz-range-thumb:hover {
+  width: 16px;
+  height: 16px;
+  box-shadow: 0 4px 12px rgba(0, 208, 132, 0.6);
 }
 
 .center {
   text-align: center;
 }
 
+/* Enhanced Status Bar */
+.header-status {
+  background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-tertiary) 100%);
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.status-section {
+  flex: 1;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-connecting);
+  display: inline-block;
+  animation: statusPulse 2s infinite;
+}
+
+.status-dot.connected {
+  background: var(--color-connected);
+  animation: statusPulse 1.5s infinite;
+}
+
+.status-dot.disconnected {
+  background: var(--color-disconnected);
+  animation: statusBlink 1s infinite;
+}
+
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes statusBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.controls-section {
+  display: flex;
+  gap: 8px;
+}
+
+.settings-btn {
+  background: none;
+  border: none;
+  color: var(--color-accent);
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.settings-btn:hover {
+  transform: rotate(20deg) scale(1.1);
+  color: var(--color-accent-light);
+}
+
+/* Toast Notifications */
 #toast {
   min-width: 25rem;
   margin-left: -12.5rem;
   text-align: center;
   right: 3rem;
   top: 3rem;
-  font-size: 1.7rem;
+  font-size: 1rem;
   background-color: var(--color-accent);
   color: #000;
   border-radius: var(--radius-sm);
-  padding: 1rem;
+  padding: 12px 16px;
   box-shadow: var(--shadow-lg);
   font-weight: 600;
+  animation: toastSlideIn 0.3s ease-out;
+}
+
+@keyframes toastSlideIn {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 .cdialog {
@@ -243,7 +357,7 @@ nav ul {
   .box footer {
     flex: 0 1 4rem;
   }
-  #player img {
+  .album-cover {
     min-width: 10rem;
     max-width: 10rem;
   }
@@ -255,10 +369,215 @@ nav ul {
   gap: 12px;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
+}
+
+.main-controls {
+  padding: 16px 0;
+}
+
+.secondary-controls {
+  padding: 12px 0;
+  gap: 20px;
 }
 
 .bordered {
   border: .5rem outset var(--color-accent);
+}
+
+/* Control Buttons Enhancement */
+.control-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.control-btn:hover {
+  background: var(--color-hover);
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.control-btn:active {
+  transform: scale(0.95);
+}
+
+.control-btn.primary {
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-light) 100%);
+  color: #000;
+  width: 72px;
+  height: 72px;
+  font-size: 32px;
+  box-shadow: 0 8px 24px rgba(0, 208, 132, 0.3);
+}
+
+.control-btn.primary:hover {
+  transform: scale(1.08);
+  box-shadow: 0 12px 32px rgba(0, 208, 132, 0.4);
+}
+
+/* Progress Bar Styling */
+.progress-container {
+  position: relative;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--color-border);
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+  transition: height 0.2s ease;
+}
+
+.progress-bar:hover {
+  height: 8px;
+}
+
+.progress-bar::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  background: var(--color-accent);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 208, 132, 0.6);
+  transition: all 0.2s ease;
+}
+
+.progress-bar::-webkit-slider-thumb:hover {
+  width: 18px;
+  height: 18px;
+  box-shadow: 0 4px 12px rgba(0, 208, 132, 0.8);
+}
+
+.progress-bar::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  background: var(--color-accent);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 208, 132, 0.6);
+  transition: all 0.2s ease;
+}
+
+.progress-bar::-moz-range-thumb:hover {
+  width: 18px;
+  height: 18px;
+  box-shadow: 0 4px 12px rgba(0, 208, 132, 0.8);
+}
+
+.progress-row {
+  padding: 16px 0;
+}
+
+.time-display {
+  text-align: right;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  padding-top: 6px;
+}
+
+.time-current {
+  font-weight: 600;
+}
+
+/* Volume Control Group */
+.volume-control-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.volume-label {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  width: 28px;
+  text-align: right;
+}
+
+/* State Icon Animation */
+.state-icon {
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.state-icon.playing {
+  animation: iconPulse 0.6s infinite;
+}
+
+@keyframes iconPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Song Details */
+.song-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+
+.artist-name {
+  color: var(--color-accent);
+  font-size: 14px;
+}
+
+.album-name {
+  color: var(--color-text-secondary);
+  font-size: 13px;
+}
+
+/* Playlist Section */
+.playlist-section {
+  padding: 16px;
+}
+
+.playlist-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.playlist-header h6 {
+  margin: 0;
+  color: var(--color-accent);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.playlist-count {
+  color: var(--color-text-secondary);
+  font-size: 11px;
+  font-weight: normal;
+}
+
+.playlist-table {
+  width: 100%;
+}
+
+.playlist-table tbody tr {
+  border-bottom: 1px solid var(--color-border);
+  transition: all 0.2s ease;
 }
 
 /* Scrollbar styling */
@@ -290,6 +609,7 @@ select {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   padding: 8px 12px;
+  transition: all 0.2s ease;
 }
 
 input[type="text"]:focus,
@@ -320,4 +640,11 @@ legend {
   color: var(--color-accent);
   font-weight: 600;
   padding: 0 8px;
+}
+
+/* Footer */
+.footer-text {
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  padding: 8px 0;
 }
