@@ -328,7 +328,7 @@ function handle_message(msg) {
           if (!plTableBody) break;
           var rows = plTableBody.getElementsByTagName('tr');
           for (var j = 0; j < rows.length; j++) rows[j].classList.remove('selected');
-          if (rows.length > 0 && message.param >= 0 && message.param < rows.length) rows[message.param].classList.add('selected');
+          if (rows.length > 0 && message.param >= 0 && message.param < rows.length) rows[message.param-1].classList.add('selected');
           break;
       }
       break;
