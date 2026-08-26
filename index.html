@@ -15,22 +15,30 @@
 
 <body onload="init();">
   <div class="container box">
-    <header>
-      <nav class="container">
-        <ul>
-          <li>
-            <!--    <a onclick="webSocketConnect();" class="button">
-              Connect</a>-->
-          </li>
-        </ul>
+    <!-- Enhanced Header with Status Bar -->
+    <header class="header-status">
+      <nav class="container navbar">
+        <div class="status-section">
+          <div class="status-indicator">
+            <span class="status-dot" id="connectionDot"></span>
+            <span class="status-text" id="statusText">Connecting...</span>
+          </div>
+        </div>
+        <div class="controls-section">
+          <button class="settings-btn" onclick="showbox('setup');" title="Settings">⚙️</button>
+        </div>
       </nav>
     </header>
-    <div id="toast" class="cdialog">...</div>
-    <div id="setup" class="cdialog ">
-      <button class="button-primary u-pull-right big" onclick="closebox('setup');">X</button><br>
+
+    <!-- Toast Notifications -->
+    <div id="toast" class="cdialog toast-notification">...</div>
+
+    <!-- Setup Dialog -->
+    <div id="setup" class="cdialog">
+      <button class="button-primary u-pull-right big" onclick="closebox('setup');">✕</button><br>
       <form>
         <fieldset>
-          <legend>Setup</legend>
+          <legend>Connection Setup</legend>
           <label for="server">Host</label>
           <input id="server" placeholder="127.0.0.1" class="form-control input-md" required="" type="text">
 
@@ -39,14 +47,16 @@
 
           <label class="inline-label"> <input id="SSL" type="checkbox"> Use SSL encryption </label>
 
-          <label for="confirm"></label>
-          <button id="confirm" class="button-primary big" onclick='saveParams()'>OK</button>
+          <button id="confirm" class="button-primary big" onclick='saveParams()' style="margin-top: 16px;">Connect</button>
+          <button id="testConnection" class="button big" onclick='testConnection()' style="margin-top: 16px; margin-left: 8px;">Test Connection</button>
 
         </fieldset>
       </form>
     </div>
-    <div id="songinfo" class="cdialog">
-      <button class="button-primary u-pull-right big" onclick="closebox('songinfo');">X</button><br>
+
+    <!-- Song Info Dialog -->
+    <div id="songinfo" class="cdialog song-info-dialog">
+      <button class="button-primary u-pull-right big" onclick="closebox('songinfo');">✕</button><br>
       <p><label>Title:</label><span id="i_tile">Title</span></p>
       <p><label>Album:</label><span id="i_album">Album</span></p>
       <p><label>Album Artist:</label><span id="i_albumartist">Album</span></p>
@@ -57,61 +67,74 @@
       <p><label>Comment:</label><span id="i_Comment">Comment</span></p>
     </div>
 
+    <!-- Main Player Section -->
     <section id="player" class="controls">
       <div class="row">
         <a href="#">
-          <img src="asset/nocover.png" loading="lazy" alt="Cover" id="cover" class="two columns" onclick="openImg(this.src);">
+          <img src="asset/nocover.png" loading="lazy" alt="Cover" id="cover" class="two columns album-cover" onclick="openImg(this.src);">
         </a>
-        <div class="seven columns">
+        <div class="seven columns song-details">
           <header>
             <h5>
-              <i id="plstate" class="ico-music"></i>
+              <i id="plstate" class="ico-music state-icon"></i>
               <a href="#" id="title" onclick="sendCommand('req', 'meta');showbox('songinfo')">Title</a>
             </h5>
           </header>
           <br>
-          <span id="artist">Artist</span>
+          <span id="artist" class="artist-name">Artist</span>
           <br>
-          <span id="album">Album</span>
-        </div>
-      </div>
-      <div class="row">
-        <div class="nine columns">
-          <input id="songpos" class="u-full-width" type="range" min=0 max=600000 value=23000 step=1000 oninput="seek();">
-        </div>
-        <div class="three columns">
-          <span id="textPos">0:00</span>/
-          <span id="textDuration">0:00</span>
+          <span id="album" class="album-name">Album</span>
         </div>
       </div>
 
-      <div class="row toolbar ">
-        <button class="two  big ico-to-start" onclick="sendCommand('act','previous');"></button>
-        <button class="two  big ico-pause button-primary" id="playbtn" onclick="sendCommand('act','playpause');"></button>
-        <button class="two  big ico-stop" onclick="sendCommand('act','stop');"></button>
-        <button class="two  big ico-to-end" onclick="sendCommand('act','next');"></button>
-        <button class="two  big ico-cog" onclick="showbox('setup');"></button>
+      <!-- Progress Bar -->
+      <div class="row progress-row">
+        <div class="nine columns">
+          <div class="progress-container">
+            <input id="songpos" class="progress-bar" type="range" min=0 max=600000 value=23000 step=1000 oninput="seek();">
+          </div>
+        </div>
+        <div class="three columns time-display">
+          <span id="textPos" class="time-current">0:00</span>/
+          <span id="textDuration" class="time-total">0:00</span>
+        </div>
       </div>
-      <div class="row toolbar">
+
+      <!-- Main Control Buttons -->
+      <div class="row toolbar main-controls">
+        <button class="control-btn ico-to-start" onclick="sendCommand('act','previous');" title="Previous"></button>
+        <button class="control-btn primary ico-pause" id="playbtn" onclick="sendCommand('act','playpause');" title="Play/Pause"></button>
+        <button class="control-btn ico-stop" onclick="sendCommand('act','stop');" title="Stop"></button>
+        <button class="control-btn ico-to-end" onclick="sendCommand('act','next');" title="Next"></button>
+      </div>
+
+      <!-- Secondary Controls -->
+      <div class="row toolbar secondary-controls">
         <div class="dropdown">
-          <button id="looping" class="one  big ico-loop "></button>
-          <div id="loopctrl" class="dropdown-content">
-            <input type="radio" name="loop" value="0" onclick="loopChange(this)">None<br/>
-            <input type="radio" name="loop" value="1" onclick="loopChange(this)">Track<br/>
-            <input type="radio" name="loop" value="2" onclick="loopChange(this)">Album<br/>
-            <input type="radio" name="loop" value="3" onclick="loopChange(this)">Playlist<br/>
+          <button id="looping" class="control-btn ico-loop" title="Loop mode"></button>
+          <div id="loopctrl" class="dropdown-content loop-dropdown">
+            <input type="radio" name="loop" value="0" onclick="loopChange(this)"><label>None</label><br/>
+            <input type="radio" name="loop" value="1" onclick="loopChange(this)"><label>Track</label><br/>
+            <input type="radio" name="loop" value="2" onclick="loopChange(this)"><label>Album</label><br/>
+            <input type="radio" name="loop" value="3" onclick="loopChange(this)"><label>Playlist</label><br/>
           </div>
         </div>
 
-        <button id="mute" class="one  big ico-volume-off" onclick="toggleMute();"></button>
-        <input id="volume" class="three " type="range" min=0 max=256 value=256 step=1 oninput="setVolume();">
+        <div class="volume-control-group">
+          <button id="mute" class="control-btn ico-volume-off" onclick="toggleMute();" title="Mute"></button>
+          <input id="volume" class="volume-slider" type="range" min=0 max=256 value=256 step=1 oninput="setVolume();">
+          <span class="volume-label" id="volumeLabel">100%</span>
+        </div>
       </div>
-
-
     </section>
+
+    <!-- Playlist Section -->
     <br>
-    <section id="playlist" class="content">
-      <table id="tabpl">
+    <section id="playlist" class="content playlist-section">
+      <div class="playlist-header">
+        <h6>Playlist <span id="playlistCount" class="playlist-count">(0 tracks)</span></h6>
+      </div>
+      <table id="tabpl" class="playlist-table">
         <thead>
           <tr class="tabheader">
             <th>Title</th>
@@ -123,9 +146,9 @@
         <tbody id="pl-data">
         </tbody>
       </table>
-
     </section>
-    <footer class="center">
+
+    <footer class="center footer-text">
       by Marco Caselli
     </footer>
   </div>
