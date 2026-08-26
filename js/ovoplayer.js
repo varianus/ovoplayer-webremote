@@ -31,7 +31,7 @@ function init() {
       var idx = parseInt(tr.dataset.index, 10);
       if (isNaN(idx)) return;
       if (e.target.closest && e.target.closest('.ico-info-circled')) {
-        sendCommand('req', 'meta', idx);
+        sendCommand('req', 'meta', idx+1);
         showbox('songinfo');
       } else {
         sendCommand('act', 'play', idx);
