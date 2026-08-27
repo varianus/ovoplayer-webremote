@@ -306,8 +306,10 @@ function handle_message(msg) {
             var row = tableObj.insertRow(-1)
             var c0 = row.insertCell(0)
             c0.innerText = playlist[i].Title
+            c0.setAttribute('data-title', playlist[i].Title)
             var c1 = row.insertCell(1)
             c1.innerText = playlist[i].Artist
+            c1.setAttribute('data-title', playlist[i].Artist)
             var c2 = row.insertCell(2)
             c2.innerText = msToTime(playlist[i].Duration)
             var ci = row.insertCell(3)
@@ -355,7 +357,7 @@ function handle_message(msg) {
 
           break
         case 'index':
-          var trele = byId('tabpl').getElementsByTagName('TR')
+          var trele = byId('tabpl').getElementsByTagName('tr')
           for (var i = 0; i < trele.length; i++) {
             trele[i].classList.remove('selected')
           }

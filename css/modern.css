@@ -46,8 +46,14 @@ body {
 
 /* ============ App Container ============ */
 .app-container {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-areas:
+    "header header"
+    "player playlist"
+    "footer footer";
+  grid-template-columns: auto auto;
+  gap: 3px;
+  
   height: 100vh;
   background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
 }
@@ -58,7 +64,7 @@ body {
   border-bottom: 1px solid var(--border-color);
   padding: 1rem 1.5rem;
   box-shadow: var(--shadow-md);
-  flex-shrink: 0;
+  grid-area: header;
 }
 
 .header-content {
@@ -111,15 +117,14 @@ body {
 
 /* ============ Player Section ============ */
 .player-section {
-  flex: 0 0 auto;
+   grid-area: player;
   background-color: var(--bg-secondary);
   padding: 2rem 1.5rem;
   max-width: 600px;
-  margin: 2rem auto 0;
   border-radius: 1rem;
   box-shadow: var(--shadow-lg);
   width: 100%;
-  max-width: 500px;
+  
 }
 
 /* Cover Container */
@@ -405,24 +410,29 @@ body {
 
 /* ============ Playlist Section ============ */
 .playlist-section {
-  flex: 1;
+  grid-area: playlist;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  padding: 2rem 1.5rem;
+    
   background-color: var(--bg-secondary);
-  margin: 2rem 1.5rem;
   border-radius: 1rem;
   box-shadow: var(--shadow-lg);
-  max-width: 500px;
   width: 100%;
-  margin-left: auto;
-  margin-right: auto;
+  height: 100%;
 }
 
 .playlist-header {
   padding: 1.5rem;
   border-bottom: 1px solid var(--border-color);
   flex-shrink: 0;
+}
+
+.playlist-table thead, 
+.playlist-table tbody, 
+.playlist-table tr {
+  display: contents;
 }
 
 .playlist-header h3 {
@@ -441,12 +451,15 @@ body {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.95rem;
+  display: grid;
+  grid-template-columns: minmax(150px, 2fr) minmax(150px, 1fr) 80px 50px;  
 }
 
 .playlist-table thead {
   position: sticky;
   top: 0;
   background-color: var(--bg-tertiary);
+  display: contents;  
 }
 
 .playlist-table th {
@@ -458,19 +471,24 @@ body {
   font-size: 0.875rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  
 }
 
 .playlist-table td {
   padding: 0.75rem;
   border-bottom: 1px solid var(--border-color);
-  color: var(--text-secondary);
+/*  color: var(--text-secondary); */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  white-space: nowrap;
+  /* text-transform: capitalize;*/
+  text-overflow: ellipsis;
 }
 
 .playlist-table tbody tr {
   transition: var(--transition);
+  display: contents;
 }
 
 .playlist-table tbody tr:hover {
@@ -481,6 +499,11 @@ body {
 .playlist-table tbody tr.selected {
   background-color: rgba(16, 185, 129, 0.2);
   color: var(--success-color);
+}
+
+.playlist-table th.action-col,
+.playlist-table td:last-child {
+  text-align: center;
 }
 
 .action-col {
@@ -495,7 +518,7 @@ body {
   color: var(--text-tertiary);
   font-size: 0.875rem;
   border-top: 1px solid var(--border-color);
-  flex-shrink: 0;
+  grid-area: footer;
 }
 
 /* ============ Modal Dialogs ============ */
@@ -713,7 +736,7 @@ body {
 /* ============ Responsive Design ============ */
 @media (max-width: 768px) {
   .app-container {
-    flex-direction: column;
+  grid-template-columns: 1fr;
   }
 
   .player-section {
@@ -763,16 +786,57 @@ body {
 }
 
 @media (max-height: 600px) {
-  .playlist-section {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-  }
-
+  
   .album-cover {
     width: 150px;
     height: 150px;
   }
 }
+
+/* Prepara le celle a contenere il tooltip posizionato in modo assoluto */
+.playlist-table td[data-title] {
+  position: relative;
+  cursor: pointer;
+}
+
+/* Crea il corpo del Tooltip (il testo) */
+.playlist-table td[data-title]:hover::before {
+  content: attr(data-title); /* Recupera il testo dall'attributo data-title */
+  position: absolute;
+  bottom: 125%; /* Lo posiziona sopra la cella */
+  left: 50%;
+  transform: translateX(-50%);
+  
+  /* Stile grafico */
+  background-color: #1e1e24; /* Colore di sfondo scuro */
+  color: #ffffff; /* Testo bianco */
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  white-space: normal; /* Permette al testo lungo di andare a capo nel tooltip */
+  width: max-content;
+  max-width: 250px; /* Larghezza massima del fumetto */
+  z-index: 10;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  pointer-events: none; /* Impedisce al tooltip di bloccare i clic del mouse */
+}
+
+/* Crea la freccetta sotto il Tooltip */
+.playlist-table td[data-title]:hover::after {
+  content: "";
+  position: absolute;
+  bottom: 110%; /* Posizionata subito sotto il corpo del tooltip */
+  left: 50%;
+  transform: translateX(-50%);
+  
+  /* Disegna il triangolo con i bordi */
+  border-width: 6px;
+  border-style: solid;
+  border-color: #1e1e24 transparent transparent transparent;
+  z-index: 10;
+  pointer-events: none;
+}
+
 
 /* ============ Scrollbar Styling ============ */
 ::-webkit-scrollbar {
