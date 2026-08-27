@@ -1,134 +1,197 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <title>Ovoplayer Web Remote</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="robots" content="noindex, nofollow">
-  <link rel="stylesheet" type="text/css" href="css/normalize.css">
-  <link rel="stylesheet" type="text/css" href="css/skeleton.css">
-  <link rel="stylesheet" type="text/css" href="css/styles.css">
+  <meta name="theme-color" content="#1a1a2e">
+  <link rel="stylesheet" type="text/css" href="css/modern.css">
   <link rel="stylesheet" type="text/css" href="css/ovoplayer-font.css">
   <script src="js/ovoplayer.js"></script>
 </head>
 
 <body onload="init();">
-  <div class="container box">
-    <header>
-      <nav class="container">
-        <ul>
-          <li>
-            <!--    <a onclick="webSocketConnect();" class="button">
-              Connect</a>-->
-          </li>
-        </ul>
-      </nav>
-    </header>
-    <div id="toast" class="cdialog">...</div>
-    <div id="setup" class="cdialog ">
-      <button class="button-primary u-pull-right big" onclick="closebox('setup');">X</button><br>
-      <form>
-        <fieldset>
-          <legend>Setup</legend>
-          <label for="server">Host</label>
-          <input id="server" placeholder="127.0.0.1" class="form-control input-md" required="" type="text">
-
-          <label for="port">Port</label>
-          <input id="port" name="port" placeholder="6860" class="form-control input-md" required="" type="text">
-
-          <label class="inline-label"> <input id="SSL" type="checkbox"> Use SSL encryption </label>
-
-          <label for="confirm"></label>
-          <button id="confirm" class="button-primary big" onclick='saveParams()'>OK</button>
-
-        </fieldset>
-      </form>
-    </div>
-    <div id="songinfo" class="cdialog">
-      <button class="button-primary u-pull-right big" onclick="closebox('songinfo');">X</button><br>
-      <p><label>Title:</label><span id="i_tile">Title</span></p>
-      <p><label>Album:</label><span id="i_album">Album</span></p>
-      <p><label>Album Artist:</label><span id="i_albumartist">Album</span></p>
-      <p><label>Artist:</label><span id="i_artist">Artist</span></p>
-      <p><label>Track:</label><span id="i_track">TrackString</span></p>
-      <p><label>Genre:</label><span id="i_genre">Genre</span></p>
-      <p><label>Year:</label><span id="i_year">Year</span></p>
-      <p><label>Comment:</label><span id="i_Comment">Comment</span></p>
-    </div>
-
-    <section id="player" class="controls">
-      <div class="row">
-        <a href="#">
-          <img src="asset/nocover.png" alt="Cover" id="cover" class="two columns" onclick="openImg(this.src);">
-        </a>
-        <div class="seven columns">
-          <header>
-            <h5>
-              <i id="plstate" class="ico-music"></i>
-              <a href="#" id="title" onclick="sendCommand('req', 'meta');showbox('songinfo')">Title</a>
-            </h5>
-          </header>
-          <br>
-          <span id="artist">Artist</span>
-          <br>
-          <span id="album">Album</span>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-content">
+        <div class="logo">
+          <i class="ico-music"></i>
+          <span>Ovoplayer</span>
         </div>
+        <nav class="header-nav">
+          <button class="icon-btn settings-btn" onclick="showbox('setup');" title="Settings">
+            <i class="ico-cog"></i>
+          </button>
+        </nav>
       </div>
-      <div class="row">
-        <div class="nine columns">
-          <input id="songpos" class="u-full-width" type="range" min=0 max=600000 value=23000 step=1000 oninput="seek();">
-        </div>
-        <div class="three columns">
-          <span id="textPos">0:00</span>/
+    </header>
+
+    <!-- Main Player -->
+    <main class="player-section">
+      <!-- Album Cover -->
+      <div class="cover-container">
+        <img src="asset/nocover.png" alt="Album Cover" id="cover" class="album-cover" onclick="openImg(this.src);" />
+      </div>
+
+      <!-- Now Playing Info -->
+      <div class="now-playing">
+        <h2 id="title" class="track-title" onclick="sendCommand('req', 'meta');showbox('songinfo')">Title</h2>
+        <p id="artist" class="track-artist">Artist</p>
+        <p id="album" class="track-album">Album</p>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="progress-container">
+        <input id="songpos" class="progress-bar" type="range" min="0" max="600000" value="23000" step="1000" oninput="seek();" />
+        <div class="time-display">
+          <span id="textPos">0:00</span>
+          <span class="separator">/</span>
           <span id="textDuration">0:00</span>
         </div>
       </div>
 
-      <div class="row toolbar ">
-        <button class="two  big ico-to-start" onclick="sendCommand('act','previous');"></button>
-        <button class="two  big ico-pause button-primary" id="playbtn" onclick="sendCommand('act','playpause');"></button>
-        <button class="two  big ico-stop" onclick="sendCommand('act','stop');"></button>
-        <button class="two  big ico-to-end" onclick="sendCommand('act','next');"></button>
-        <button class="two  big ico-cog" onclick="showbox('setup');"></button>
+      <!-- Playback Controls -->
+      <div class="controls-container">
+        <button class="control-btn" onclick="sendCommand('act','previous');" title="Previous">
+          <i class="ico-to-start"></i>
+        </button>
+        <button class="control-btn play-btn" id="playbtn" onclick="sendCommand('act','playpause');" title="Play/Pause">
+          <i class="ico-pause"></i>
+        </button>
+        <button class="control-btn" onclick="sendCommand('act','stop');" title="Stop">
+          <i class="ico-stop"></i>
+        </button>
+        <button class="control-btn" onclick="sendCommand('act','next');" title="Next">
+          <i class="ico-to-end"></i>
+        </button>
       </div>
-      <div class="row toolbar">
-        <div class="dropdown">
-          <button id="looping" class="one  big ico-loop "></button>
-          <div id="loopctrl" class="dropdown-content">
-            <input type="radio" name="loop" value="0" onclick="loopChange(this)">None<br/>
-            <input type="radio" name="loop" value="1" onclick="loopChange(this)">Track<br/>
-            <input type="radio" name="loop" value="2" onclick="loopChange(this)">Album<br/>
-            <input type="radio" name="loop" value="3" onclick="loopChange(this)">Playlist<br/>
+
+      <!-- Secondary Controls -->
+      <div class="secondary-controls">
+        <div class="control-group">
+          <button id="looping" class="control-btn loop-btn ico-loop" title="Loop Mode"></button>
+          <div class="dropdown" id="loopctrl">
+            <label><input type="radio" name="loop" value="0" onclick="loopChange(this)"> None</label>
+            <label><input type="radio" name="loop" value="1" onclick="loopChange(this)"> Track</label>
+            <label><input type="radio" name="loop" value="2" onclick="loopChange(this)"> Album</label>
+            <label><input type="radio" name="loop" value="3" onclick="loopChange(this)"> Playlist</label>
           </div>
         </div>
 
-        <button id="mute" class="one  big ico-volume-off" onclick="toggleMute();"></button>
-        <input id="volume" class="three " type="range" min=0 max=256 value=256 step=1 oninput="setVolume();">
+        <div class="control-group volume-control">
+          <button id="mute" class="control-btn ico-volume-off" onclick="toggleMute();" title="Mute"></button>
+          <input id="volume" class="volume-slider" type="range" min="0" max="256" value="256" step="1" oninput="setVolume();" />
+        </div>
       </div>
+    </main>
 
-
+    <!-- Playlist Section -->
+    <section class="playlist-section">
+      <div class="playlist-header">
+        <h3>Playlist</h3>
+      </div>
+      <div class="playlist-table-wrapper">
+        <table class="playlist-table" id="tabpl">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Artist</th>
+              <th>Duration</th>
+              <th class="action-col"></th>
+            </tr>
+          </thead>
+          <tbody id="pl-data">
+          </tbody>
+        </table>
+      </div>
     </section>
-    <br>
-    <section id="playlist" class="content">
-      <table id="tabpl">
-        <thead>
-          <tr class="tabheader">
-            <th>Title</th>
-            <th>Artist</th>
-            <th>Duration</th>
-            <th>&nbsp;</th>
-          </tr>
-        </thead>
-        <tbody id="pl-data">
-        </tbody>
-      </table>
 
-    </section>
-    <footer class="center">
-      by Marco Caselli
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>Ovoplayer Web Remote by Marco Caselli</p>
     </footer>
   </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Setup Dialog -->
+  <div id="setup" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Settings</h3>
+        <button class="close-btn" onclick="closebox('setup');">×</button>
+      </div>
+      <form class="modal-body">
+        <div class="form-group">
+          <label for="server">Host</label>
+          <input id="server" placeholder="127.0.0.1" class="form-input" required type="text">
+        </div>
+
+        <div class="form-group">
+          <label for="port">Port</label>
+          <input id="port" name="port" placeholder="6860" class="form-input" required type="text">
+        </div>
+
+        <div class="form-group checkbox">
+          <label>
+            <input id="SSL" type="checkbox">
+            Use SSL encryption
+          </label>
+        </div>
+
+        <button type="button" class="btn btn-primary" onclick="saveParams()">Save Settings</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Song Info Dialog -->
+  <div id="songinfo" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Track Information</h3>
+        <button class="close-btn" onclick="closebox('songinfo');">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="info-item">
+          <label>Title:</label>
+          <span id="i_tile">Title</span>
+        </div>
+        <div class="info-item">
+          <label>Album:</label>
+          <span id="i_album">Album</span>
+        </div>
+        <div class="info-item">
+          <label>Album Artist:</label>
+          <span id="i_albumartist">Album Artist</span>
+        </div>
+        <div class="info-item">
+          <label>Artist:</label>
+          <span id="i_artist">Artist</span>
+        </div>
+        <div class="info-item">
+          <label>Track:</label>
+          <span id="i_track">TrackString</span>
+        </div>
+        <div class="info-item">
+          <label>Genre:</label>
+          <span id="i_genre">Genre</span>
+        </div>
+        <div class="info-item">
+          <label>Year:</label>
+          <span id="i_year">Year</span>
+        </div>
+        <div class="info-item">
+          <label>Comment:</label>
+          <span id="i_Comment">Comment</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </body>
 
 </html>
