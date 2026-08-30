@@ -1,5 +1,7 @@
+var params;
+
 function init() {
-  const params = loadParams()
+  params = loadParams()
   webSocketConnect(params.server, params.port, params.useSSL)
 }
 
@@ -8,6 +10,7 @@ function saveParams() {
     localStorage.setItem('server', byId('server').value)
     localStorage.setItem('port', byId('port').value)
     localStorage.setItem('useSSL', String(byId('SSL').checked))
+    closebox('setup') 
     init()
   }
 
@@ -90,13 +93,13 @@ function openImg(src) {
 }
 
 function showbox(id) {
-  const x = byId(id)
-  if (x) x.classList.add('show')
+  const dlg = byId(id)
+  if (dlg) dlg.classList.add('show')
 }
 
 function closebox(id) {
-  const x = byId(id)
-  if (x) x.className = x.className.replace('show', '')
+  const dlg = byId(id)
+  if (dlg) dlg.className = dlg.className.replace('show', '')
 }
 
 function webSocketConnect(server, port, useSSL) {
@@ -118,7 +121,6 @@ function webSocketConnect(server, port, useSSL) {
       toast('Connection lost: retrying in 5 seconds')
       console.log('disconnected')
       setTimeout(function() {
-        const params = loadParams()
         webSocketConnect(params.server, params.port, params.useSSL)
       }, 5000)
     }
