@@ -47,12 +47,21 @@ function loadParams() {
 
 }
 
+// Simple element cache to avoid repeated document.getElementById lookups
+var _elCache = Object.create(null)
 function byId(id) {
-  return document.getElementById(id)
+  // return cached element if present
+  var el = _elCache[id]
+  if (el) return el
+  el = document.getElementById(id)
+  // cache only if exists
+  if (el) _elCache[id] = el
+  return el
 }
 
 function toast(message) {
   var x = byId('toast')
+  if (!x) return
   x.innerText = message
   x.classList.add('show')
   setTimeout(function() {
@@ -63,18 +72,18 @@ function toast(message) {
 function openImg(src) {
   var newTab = window.open()
   newTab.document.body.innerHTML = '<img src="' + src + '">'
-    //  window.open(largeImgSrc, "title here", "width=400, height=300")
+  //  window.open(largeImgSrc, "title here", "width=400, height=300")
   return false
 }
 
 function showbox(id) {
   var x = byId(id)
-  x.classList.add('show')
+  if (x) x.classList.add('show')
 }
 
 function closebox(id) {
   var x = byId(id)
-  x.className = x.className.replace('show', '')
+  if (x) x.className = x.className.replace('show', '')
 }
 
 function webSocketConnect(server, port, useSSL) {
@@ -107,8 +116,7 @@ function webSocketConnect(server, port, useSSL) {
 
 function sendCommand(category, command, params) {
   var msg = category + ':' + command
-  if (!(params == null))
-    msg += '=' + params
+  if (!(params == null)) msg += '=' + params
 
   msg = encodeOvoLength(msg.length) + msg
 
@@ -253,54 +261,72 @@ function msToTime(duration) {
 }
 
 function handle_message(msg) {
-  if (msg.data.length == 0)
-    return
+  if (msg.data.length == 0) return
 
-  message = split_message(msg.data)
+  var message = split_message(msg.data)
 
   switch (message.category) {
     case 'inf':
       switch (message.command) {
-        case 'pos':
-          byId('songpos').value = message.param
-          byId('textPos').innerText = msToTime(message.param)
-          break
-        case 'vol':
-          byId('volume').value = message.param
-          break
+        case 'pos': {
+          var songpos = byId('songpos')
+          var textPos = byId('textPos')
+          if (songpos) songpos.value = message.param
+          if (textPos) textPos.innerText = msToTime(message.param)
+        }
+        break
+        case 'vol': {
+          var volume = byId('volume')
+          if (volume) volume.value = message.param
+        }
+        break
         case 'mute':
           toggleMute(message.param)
           break
 
-        case 'meta':
+        case 'meta': {
           var meta = decodeMeta(message.param)
 
           if (meta.Index == -1) {
-            byId('songpos').max = meta.Duration
-            byId('title').innerText = meta.Title
-            byId('artist').innerText = meta.Artist
-            byId('album').innerText = meta.Album
-            byId('textDuration').innerText = msToTime(meta.Duration)
+            var songpos = byId('songpos')
+            if (songpos) songpos.max = meta.Duration
+            var title = byId('title')
+            if (title) title.innerText = meta.Title
+            var artist = byId('artist')
+            if (artist) artist.innerText = meta.Artist
+            var album = byId('album')
+            if (album) album.innerText = meta.Album
+            var textDuration = byId('textDuration')
+            if (textDuration) textDuration.innerText = msToTime(meta.Duration)
           }
-          byId('i_tile').innerText = meta.Title
-          byId('i_album').innerText = meta.Album
-          byId('i_albumartist').innerText = meta.AlbumArtist
-          byId('i_artist').innerText = meta.Artist
-          byId('i_track').innerText = meta.TrackString
-          byId('i_genre').innerText = meta.Genre
-          byId('i_year').innerText = meta.Year
-          byId('i_Comment').innerText = meta.Comment
-          break
+          var i_tile = byId('i_tile')
+          if (i_tile) i_tile.innerText = meta.Title
+          var i_album = byId('i_album')
+          if (i_album) i_album.innerText = meta.Album
+          var i_albumartist = byId('i_albumartist')
+          if (i_albumartist) i_albumartist.innerText = meta.AlbumArtist
+          var i_artist = byId('i_artist')
+          if (i_artist) i_artist.innerText = meta.Artist
+          var i_track = byId('i_track')
+          if (i_track) i_track.innerText = meta.TrackString
+          var i_genre = byId('i_genre')
+          if (i_genre) i_genre.innerText = meta.Genre
+          var i_year = byId('i_year')
+          if (i_year) i_year.innerText = meta.Year
+          var i_Comment = byId('i_Comment')
+          if (i_Comment) i_Comment.innerText = meta.Comment
+        }
+        break
         case 'coverurl':
-        case 'coverimg':
-          if (message.param === '')
-            byId('cover').src = 'asset/nocover.png'
-          else
-            byId('cover').src = message.param
-          break
-        case 'playlist':
+        case 'coverimg': {
+          var cover = byId('cover')
+          if (cover) cover.src = (message.param === '') ? 'asset/nocover.png' : message.param
+        }
+        break
+        case 'playlist': {
           var playlist = decodePlayList(message.param)
           var tableObj = byId('pl-data')
+          if (!tableObj) break
           tableObj.innerText = ''
           for (var i = 0; i < playlist.length; i++) {
             var row = tableObj.insertRow(-1)
@@ -326,46 +352,52 @@ function handle_message(msg) {
               }
             })()
           }
-          break
-        case 'state':
-          byId('playbtn').classList.remove('ico-play', 'ico-pause')
+        }
+        break
+        case 'state': {
+          var playbtn = byId('playbtn')
+          var plstate = byId('plstate')
+          if (playbtn) playbtn.classList.remove('ico-play', 'ico-pause')
           switch (message.param) {
             case '0':
-              byId('plstate').className = 'ico-stop'
-              byId('playbtn').classList.add('ico-play')
+              if (plstate) plstate.className = 'ico-stop'
+              if (playbtn) playbtn.classList.add('ico-play')
               break
             case '1':
-              byId('plstate').className = 'ico-play'
-              byId('playbtn').classList.add('ico-pause')
+              if (plstate) plstate.className = 'ico-play'
+              if (playbtn) playbtn.classList.add('ico-pause')
               sendCommand('req', 'meta')
               sendCommand('req', 'coverimg')
               break
             case '2':
-              byId('plstate').className = 'ico-pause'
-              byId('playbtn').classList.add('ico-play')
+              if (plstate) plstate.className = 'ico-pause'
+              if (playbtn) playbtn.classList.add('ico-play')
               break
           }
-          break
-        case 'loop':
-          var radios = byId('loopctrl').getElementsByTagName('input')
+        }
+        break
+        case 'loop': {
+          var radios = byId('loopctrl') && byId('loopctrl').getElementsByTagName('input')
+          if (!radios) break
           for (var i = 0; i < radios.length; i++) {
-            if ((radios[i].type === 'radio') && (radios[i].value == message.param))
-              radios[i].checked = true
-            else
-              radios[i].checked = false
+            if ((radios[i].type === 'radio') && (radios[i].value == message.param)) radios[i].checked = true
+            else radios[i].checked = false
           }
-
-          break
-        case 'index':
-          var trele = byId('tabpl').getElementsByTagName('tr')
+        }
+        break
+        case 'index': {
+          var tabpl = byId('tabpl')
+          if (!tabpl) break
+          var trele = tabpl.getElementsByTagName('tr')
           for (var i = 0; i < trele.length; i++) {
             trele[i].classList.remove('selected')
           }
           if (trele.length > 1) {
             trele[message.param].classList.add('selected')
-              // trele[message.param].scrollIntoView([])
+            // trele[message.param].scrollIntoView([])
           }
-          break
+        }
+        break
       }
       break
     case 'app':
@@ -381,23 +413,24 @@ function handle_message(msg) {
 }
 
 function toggleMute(gui) {
+  var muteEl = byId('mute')
+  if (!muteEl) return
   if (gui == 0) {
-    byId('mute').classList.remove('ico-volume-off')
-    byId('mute').classList.add('ico-volume-up')
-  } else
-  if (gui == 1) {
-    byId('mute').classList.remove('ico-volume-up')
-    byId('mute').classList.add('ico-volume-off')
+    muteEl.classList.remove('ico-volume-off')
+    muteEl.classList.add('ico-volume-up')
+  } else if (gui == 1) {
+    muteEl.classList.remove('ico-volume-up')
+    muteEl.classList.add('ico-volume-off')
   } else {
-    if (byId('mute').classList.contains('ico-volume-off'))
-      sendCommand('act', 'unmute')
-    else
-      sendCommand('act', 'mute')
+    if (muteEl.classList.contains('ico-volume-off')) sendCommand('act', 'unmute')
+    else sendCommand('act', 'mute')
   }
 }
 
 function setVolume() {
-  sendCommand('act', 'vol', byId('volume').value)
+  var volume = byId('volume')
+  if (!volume) return
+  sendCommand('act', 'vol', volume.value)
 }
 
 function loopChange(looping) {
@@ -405,5 +438,7 @@ function loopChange(looping) {
 }
 
 function seek() {
-  sendCommand('act', 'seek', byId('songpos').value)
+  var songpos = byId('songpos')
+  if (!songpos) return
+  sendCommand('act', 'seek', songpos.value)
 }
