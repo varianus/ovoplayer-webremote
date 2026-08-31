@@ -61,7 +61,10 @@ body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
   overflow: hidden;
-  height: 100vh;
+  min-height: 100vh;
+  min-height: 100dvh;
+  min-height: 100svh;
+  height: 100%;
   transition: background-color var(--transition), color var(--transition);
 }
 
@@ -78,7 +81,10 @@ body {
   width: 100%;
   max-width: 1400px;
   height: 100vh;
+  height: 100dvh;
   min-height: 100vh;
+  min-height: 100dvh;
+  min-height: 100svh;
   margin: 0 auto;
   padding: 0 0.75rem 0.75rem;
   background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
@@ -155,6 +161,8 @@ body {
   box-shadow: var(--shadow-lg);
   width: 100%;
   min-height: 0;
+  max-height: calc(100dvh - 9rem);
+  overflow: hidden;
 }
 
 /* Cover Container */
