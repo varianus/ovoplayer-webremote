@@ -2,6 +2,7 @@ var params;
 
 function init() {
   params = loadParams()
+  applyTheme(params.theme)
   webSocketConnect(params.server, params.port, params.useSSL)
 }
 
@@ -10,18 +11,38 @@ function saveParams() {
     localStorage.setItem('server', byId('server').value)
     localStorage.setItem('port', byId('port').value)
     localStorage.setItem('useSSL', String(byId('SSL').checked))
-    closebox('setup') 
+    localStorage.setItem('theme', byId('theme').value)
+    closebox('setup')
     init()
   }
+}
 
+function applyTheme(theme) {
+  const selectedTheme = theme === 'light' ? 'light' : 'dark'
+  document.body.setAttribute('data-theme', selectedTheme)
+
+  const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+  if (metaThemeColor) {
+    metaThemeColor.setAttribute('content', selectedTheme === 'light' ? '#f8fafc' : '#1a1a2e')
+  }
+
+  if (localStorage) {
+    localStorage.setItem('theme', selectedTheme)
+  }
+
+  const themeEl = byId('theme')
+  if (themeEl) {
+    themeEl.value = selectedTheme
+  }
 }
 
 function loadParams() {
-  let server, port, useSSL
+  let server, port, useSSL, theme
   if (localStorage) {
     server = localStorage.getItem('server')
     port = localStorage.getItem('port')
     useSSL = localStorage.getItem('useSSL')
+    theme = localStorage.getItem('theme')
   }
 
   if (!server) {
@@ -38,20 +59,26 @@ function loadParams() {
     useSSL = useSSL === 'true'
   }
 
+  if (!theme) {
+    theme = 'dark'
+  }
+
   if (localStorage) {
     localStorage.setItem('server', server)
     localStorage.setItem('port', port)
     localStorage.setItem('useSSL', String(useSSL))
+    localStorage.setItem('theme', theme)
   }
 
   const sEl = byId('server')
   const pEl = byId('port')
   const sslEl = byId('SSL')
+  const themeEl = byId('theme')
   if (sEl) sEl.value = server
   if (pEl) pEl.value = port
   if (sslEl) sslEl.checked = useSSL
-  return { server, port, useSSL }
-
+  if (themeEl) themeEl.value = theme
+  return { server, port, useSSL, theme }
 }
 
 // Simple element cache to avoid repeated document.getElementById lookups
