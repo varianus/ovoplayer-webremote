@@ -110,8 +110,10 @@ body {
   color: var(--primary-light);
 }
 
-.logo i {
+.logo img {
   font-size: 2rem;
+  width: 2rem;
+  height: 2rem;
 }
 
 .header-nav {
