@@ -10,7 +10,6 @@ function saveParams() {
     localStorage.setItem('useSSL', byId('SSL').checked)
     init()
   }
-
 }
 
 function loadParams() {
@@ -331,18 +330,15 @@ function handle_message(msg) {
           byId('playbtn').classList.remove('ico-play', 'ico-pause')
           switch (message.param) {
             case '0':
-              byId('plstate').className = 'ico-stop'
-              byId('playbtn').classList.add('ico-play')
+              byId('plstate').className = 'ico-play'
               break
             case '1':
-              byId('plstate').className = 'ico-play'
-              byId('playbtn').classList.add('ico-pause')
+              byId('plstate').className = 'ico-pause'
               sendCommand('req', 'meta')
               sendCommand('req', 'coverimg')
               break
             case '2':
-              byId('plstate').className = 'ico-pause'
-              byId('playbtn').classList.add('ico-play')
+              byId('plstate').className = 'ico-play'
               break
           }
           break

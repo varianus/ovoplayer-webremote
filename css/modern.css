@@ -51,9 +51,9 @@ body {
     "header header"
     "player playlist"
     "footer footer";
-  grid-template-columns: auto auto;
+  grid-template-columns: minmax(0, .4fr) minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
   gap: 3px;
-  
   height: 100vh;
   background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
 }
@@ -117,14 +117,15 @@ body {
 
 /* ============ Player Section ============ */
 .player-section {
-   grid-area: player;
+  grid-area: player;
   background-color: var(--bg-secondary);
   padding: 2rem 1.5rem;
   max-width: 600px;
   border-radius: 1rem;
   box-shadow: var(--shadow-lg);
   width: 100%;
-  
+  min-height: 0;
+
 }
 
 /* Cover Container */
@@ -415,7 +416,7 @@ body {
   flex-direction: column;
   overflow: hidden;
   padding: 2rem 1.5rem;
-    
+  min-height: 0;
   background-color: var(--bg-secondary);
   border-radius: 1rem;
   box-shadow: var(--shadow-lg);
@@ -429,8 +430,8 @@ body {
   flex-shrink: 0;
 }
 
-.playlist-table thead, 
-.playlist-table tbody, 
+.playlist-table thead,
+.playlist-table tbody,
 .playlist-table tr {
   display: contents;
 }
@@ -443,6 +444,7 @@ body {
 
 .playlist-table-wrapper {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
   padding: 0 1rem;
 }
@@ -452,14 +454,14 @@ body {
   border-collapse: collapse;
   font-size: 0.95rem;
   display: grid;
-  grid-template-columns: minmax(150px, 2fr) minmax(150px, 1fr) 80px 50px;  
+  grid-template-columns: minmax(150px, 2fr) minmax(150px, 1fr) 80px 50px;
 }
 
 .playlist-table thead {
   position: sticky;
   top: 0;
   background-color: var(--bg-tertiary);
-  display: contents;  
+  display: contents;
 }
 
 .playlist-table th {
@@ -471,13 +473,13 @@ body {
   font-size: 0.875rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  
+
 }
 
 .playlist-table td {
   padding: 0.75rem;
   border-bottom: 1px solid var(--border-color);
-/*  color: var(--text-secondary); */
+  /*  color: var(--text-secondary); */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -496,11 +498,6 @@ body {
   color: var(--text-primary);
 }
 
-.playlist-table tbody tr.selected {
-  background-color: rgba(16, 185, 129, 0.2);
-  color: var(--success-color);
-}
-
 .playlist-table th.action-col,
 .playlist-table td:last-child {
   text-align: center;
@@ -511,6 +508,12 @@ body {
   padding: 0 0.5rem;
 }
 
+.playlist-table tbody tr.selected {
+  background-color: rgba(16, 185, 129, 0.2) !important;
+  color: var(--success-color) !important;
+}
+
+
 /* ============ Footer ============ */
 .app-footer {
   padding: 1rem;
@@ -519,6 +522,8 @@ body {
   font-size: 0.875rem;
   border-top: 1px solid var(--border-color);
   grid-area: footer;
+  position: relative;
+  z-index: 1;
 }
 
 /* ============ Modal Dialogs ============ */
@@ -544,6 +549,7 @@ body {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -565,6 +571,7 @@ body {
     transform: translateY(20px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -727,6 +734,7 @@ body {
     transform: translateX(400px);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
@@ -734,62 +742,139 @@ body {
 }
 
 /* ============ Responsive Design ============ */
-@media (max-width: 768px) {
+
+@media (min-resolution: 192dpi) {
+html {
+  font-size: 8px;
+  }  
+.album-cover {
+    width: 100px;
+    height: 100px;
+  }  
+
+}
+
+@media (max-width: 900px) {
   .app-container {
-  grid-template-columns: 1fr;
+    grid-template-areas:
+      "header"
+      "player"
+      "playlist"
+      "footer";
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .player-section,
+  .playlist-section {
+    max-width: 100%;
+    width: 100%;
+    margin: 0;
+    border-radius: 0.75rem;
   }
 
   .player-section {
-    max-width: 100%;
-    margin: 1rem;
-    padding: 1.5rem 1rem;
+    padding: 1.25rem 1rem;
   }
 
   .playlist-section {
-    max-width: 100%;
-    margin: 1rem;
-  }
-
-  .album-cover {
-    width: 180px;
-    height: 180px;
-  }
-
-  .track-title {
-    font-size: 1.5rem;
-  }
-
-  .controls-container {
-    gap: 0.75rem;
-  }
-
-  .control-btn {
-    width: 3rem;
-    height: 3rem;
-    font-size: 1.25rem;
-  }
-
-  .toast {
-    bottom: 1rem;
-    right: 1rem;
-    min-width: 200px;
-    padding: 0.75rem 1rem;
+    padding: 1rem 0.75rem;
   }
 
   .header-content {
     padding: 0 0.5rem;
+    gap: 0.75rem;
   }
 
   .logo {
     font-size: 1.25rem;
   }
+
+  .playlist-table {
+    grid-template-columns: minmax(120px, 2fr) minmax(90px, 1fr) 80px 50px;
+  }
 }
 
-@media (max-height: 600px) {
-  
+@media (max-width: 560px) {
+  .app-header {
+    padding: 0.8rem 0.75rem;
+  }
+
+  .header-content {
+    flex-wrap: wrap;
+  }
+
+  .header-nav {
+    margin-left: auto;
+  }
+
+  .player-section,
+  .playlist-section {
+    padding: 1rem 0.75rem;
+  }
+
   .album-cover {
-    width: 150px;
-    height: 150px;
+    width: 100px;
+    height: 100px;
+  }
+
+  .track-title {
+    font-size: 1.35rem;
+  }
+
+  .controls-container {
+    gap: 0.5rem;
+  }
+
+  .control-btn {
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.1rem;
+  }
+
+  .secondary-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .volume-control {
+    width: 100%;
+  }
+
+  .playlist-table-wrapper {
+    padding: 0 0.35rem;
+  }
+
+  .playlist-table {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) 68px 44px;
+  }
+
+  .playlist-table th,
+  .playlist-table td {
+    padding: 0.6rem 0.4rem;
+    font-size: 0.78rem;
+  }
+
+  .toast {
+    bottom: 1rem;
+    right: 1rem;
+    left: 1rem;
+    min-width: auto;
+    padding: 0.75rem 1rem;
+  }
+
+  .modal-content {
+    width: calc(100% - 1rem);
+    max-width: 100%;
+  }
+
+  .info-item {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .info-item label {
+    min-width: 0;
   }
 }
 
@@ -801,34 +886,42 @@ body {
 
 /* Crea il corpo del Tooltip (il testo) */
 .playlist-table td[data-title]:hover::before {
-  content: attr(data-title); /* Recupera il testo dall'attributo data-title */
+  content: attr(data-title);
+  /* Recupera il testo dall'attributo data-title */
   position: absolute;
-  bottom: 125%; /* Lo posiziona sopra la cella */
+  bottom: 125%;
+  /* Lo posiziona sopra la cella */
   left: 50%;
   transform: translateX(-50%);
-  
+
   /* Stile grafico */
-  background-color: #1e1e24; /* Colore di sfondo scuro */
-  color: #ffffff; /* Testo bianco */
+  background-color: #1e1e24;
+  /* Colore di sfondo scuro */
+  color: #ffffff;
+  /* Testo bianco */
   padding: 6px 12px;
   border-radius: 4px;
   font-size: 0.85rem;
-  white-space: normal; /* Permette al testo lungo di andare a capo nel tooltip */
+  white-space: normal;
+  /* Permette al testo lungo di andare a capo nel tooltip */
   width: max-content;
-  max-width: 250px; /* Larghezza massima del fumetto */
+  max-width: 250px;
+  /* Larghezza massima del fumetto */
   z-index: 10;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  pointer-events: none; /* Impedisce al tooltip di bloccare i clic del mouse */
+  pointer-events: none;
+  /* Impedisce al tooltip di bloccare i clic del mouse */
 }
 
 /* Crea la freccetta sotto il Tooltip */
 .playlist-table td[data-title]:hover::after {
   content: "";
   position: absolute;
-  bottom: 110%; /* Posizionata subito sotto il corpo del tooltip */
+  bottom: 110%;
+  /* Posizionata subito sotto il corpo del tooltip */
   left: 50%;
   transform: translateX(-50%);
-  
+
   /* Disegna il triangolo con i bordi */
   border-width: 6px;
   border-style: solid;
