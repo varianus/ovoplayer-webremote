@@ -19,9 +19,36 @@
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 25px -5px rgba(99, 102, 241, 0.3);
   --transition: all 0.3s ease;
 }
 
+body.light-theme {
+  --primary-color: #4f46e5;
+  --primary-dark: #3730a3;
+  --primary-light: #6366f1;
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #e2e8f0;
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-tertiary: #64748b;
+  --border-color: #cbd5e1;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(99, 102, 241, 0.3);
+}
+
+/* Modifica opzionale per il tooltip in Modalità Light */
+body.light-theme .playlist-table td[data-title]:hover::before {
+  background-color: var(--text-secondary);
+  color: var(--bg-secondary);;
+}
+
+body.light-theme .playlist-table td[data-title]:hover::after {
+  border-color: var(--text-secondary) transparent transparent transparent;
+}
 /* ============ Reset & Base Styles ============ */
 *,
 *::before,
@@ -150,7 +177,7 @@ body {
 
 .album-cover:hover {
   transform: scale(1.02);
-  box-shadow: 0 20px 25px -5px rgba(99, 102, 241, 0.3);
+  box-shadow: var(--shadow-xl);
 }
 
 /* Now Playing */
@@ -217,7 +244,7 @@ body {
   border-radius: 50%;
   background: var(--primary-color);
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 2px 8px var(--shadow-xl)
   transition: var(--transition);
 }
 
@@ -233,7 +260,7 @@ body {
   background: var(--primary-color);
   cursor: pointer;
   border: none;
-  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 2px 8px var(--shadow-xl);
   transition: var(--transition);
 }
 
@@ -338,7 +365,7 @@ body {
   border-radius: 50%;
   background: var(--primary-color);
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 2px 4px var(--shadow-xl);
 }
 
 /* Dropdown */
@@ -396,7 +423,7 @@ body {
   overflow: hidden;
   background-color: var(--bg-secondary);
   border-radius: 1rem;
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-sm);
   margin-right: 1rem;
 }
 
@@ -471,7 +498,7 @@ body {
 }
 
 .playlist-table tbody tr.selected {
-  background-color: rgba(16, 185, 129, 0.15);
+  background-color:   var(--bg-tertiary);
   color: var(--success-color);
 }
 
@@ -496,7 +523,7 @@ body {
   width: max-content;
   max-width: 250px;
   z-index: 10;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 10px var(--shadow-lg);
   pointer-events: none;
 }
 

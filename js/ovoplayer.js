@@ -1,6 +1,7 @@
 function init() {
-  var params = loadParams()
-  webSocketConnect(params.server, params.port, params.useSSL)
+  var params = loadParams();
+  applyTheme(params.theme);
+  webSocketConnect(params.server, params.port, params.useSSL);
 }
 
 function saveParams() {
@@ -8,6 +9,7 @@ function saveParams() {
     localStorage.setItem('server', byId('server').value)
     localStorage.setItem('port', byId('port').value)
     localStorage.setItem('useSSL', byId('SSL').checked)
+    localStorage.setItem('theme', theme);
     init()
   }
 }
@@ -17,6 +19,7 @@ function loadParams() {
     server = localStorage.getItem('server')
     port = localStorage.getItem('port')
     useSSL = localStorage.getItem('useSSL')
+    theme = localStorage.getItem('theme');
   }
 
   if (!server) {
@@ -32,17 +35,19 @@ function loadParams() {
   } else {
     useSSL = useSSL === 'true'
   }
+  if (!theme) theme = 'dark';
 
   if (localStorage) {
     localStorage.setItem('server', server)
     localStorage.setItem('port', port)
     localStorage.setItem('useSSL', useSSL)
+    localStorage.setItem('theme', theme)
   }
 
   byId('server').value = server
   byId('port').value = port
   byId('SSL').checked = useSSL
-  return { server, port, useSSL }
+  return { server, port, useSSL, theme }
 
 }
 
@@ -54,15 +59,40 @@ function toast(message) {
   var x = byId('toast')
   x.innerText = message
   x.classList.add('show')
-  setTimeout(function() {
+  setTimeout(function () {
     x.classList.remove('show')
   }, 4000)
+}
+function toggleTheme() {
+  var currentTheme = document.body.classList.contains('light-theme') ? 'light' : 'dark';
+  var newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+  if (localStorage) {
+    localStorage.setItem('theme', newTheme);
+  }
+
+  applyTheme(newTheme);
+}
+
+function applyTheme(theme) {
+  var icon = byId('theme-icon');
+  if (theme === 'light') {
+    document.body.classList.add('light-theme');
+    if (icon) {
+      icon.className = 'ico-star-half-alt'; // Mostra l'icona luna per tornare al dark
+    }
+  } else {
+    document.body.classList.remove('light-theme');
+    if (icon) {
+      icon.className = 'ico-star'; // Mostra l'icona sole per passare al light
+    }
+  }
 }
 
 function openImg(src) {
   var newTab = window.open()
   newTab.document.body.innerHTML = '<img src="' + src + '">'
-    //  window.open(largeImgSrc, "title here", "width=400, height=300")
+  //  window.open(largeImgSrc, "title here", "width=400, height=300")
   return false
 }
 
@@ -84,17 +114,17 @@ function webSocketConnect(server, port, useSSL) {
   }
 
   try {
-    socket.onopen = function() {
+    socket.onopen = function () {
       toast('Connected')
       connected()
     }
-    socket.onmessage = function(msg) {
+    socket.onmessage = function (msg) {
       handle_message(msg)
     }
-    socket.onclose = function() {
+    socket.onclose = function () {
       toast('Connection lost: retrying in 5 seconds')
       console.log('disconnected')
-      setTimeout(function() {
+      setTimeout(function () {
         var params = loadParams()
         webSocketConnect(params.server, params.port, params.useSSL)
       }, 5000)
@@ -152,14 +182,14 @@ function encodeOvoLength(len) {
   return btoa(binary_string)
 }
 
-var ovoCommand = function() {
+var ovoCommand = function () {
   this.size = 0
   this.category = ''
   this.command = ''
   this.param = ''
 }
 
-var ovoMeta = function() {
+var ovoMeta = function () {
   this.Index = 0
   this.ID = 0
   this.FileName = ''
@@ -313,13 +343,13 @@ function handle_message(msg) {
             c2.innerText = msToTime(playlist[i].Duration)
             var ci = row.insertCell(3)
             ci.innerHTML = '<i class="ico-info-circled"></i>'
-            c0.onclick = (function() {
-              return function() {
+            c0.onclick = (function () {
+              return function () {
                 sendCommand('act', 'play', this.parentElement.rowIndex - 1)
               }
             })()
-            ci.onclick = (function() {
-              return function() {
+            ci.onclick = (function () {
+              return function () {
                 sendCommand('req', 'meta', this.parentElement.rowIndex)
                 showbox('songinfo')
               }
@@ -359,7 +389,7 @@ function handle_message(msg) {
           }
           if (trele.length > 1) {
             trele[message.param].classList.add('selected')
-              // trele[message.param].scrollIntoView([])
+            // trele[message.param].scrollIntoView([])
           }
           break
       }
@@ -381,15 +411,15 @@ function toggleMute(gui) {
     byId('mute').classList.remove('ico-volume-off')
     byId('mute').classList.add('ico-volume-up')
   } else
-  if (gui == 1) {
-    byId('mute').classList.remove('ico-volume-up')
-    byId('mute').classList.add('ico-volume-off')
-  } else {
-    if (byId('mute').classList.contains('ico-volume-off'))
-      sendCommand('act', 'unmute')
-    else
-      sendCommand('act', 'mute')
-  }
+    if (gui == 1) {
+      byId('mute').classList.remove('ico-volume-up')
+      byId('mute').classList.add('ico-volume-off')
+    } else {
+      if (byId('mute').classList.contains('ico-volume-off'))
+        sendCommand('act', 'unmute')
+      else
+        sendCommand('act', 'mute')
+    }
 }
 
 function setVolume() {
