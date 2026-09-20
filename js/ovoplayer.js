@@ -1,38 +1,19 @@
 var params;
 
 function init() {
-  params = loadParams()
-  applyTheme(params.theme)
-  webSocketConnect(params.server, params.port, params.useSSL)
+  var params = loadParams();
+  applyTheme(params.theme);
+  webSocketConnect(params.server, params.port, params.useSSL);
 }
 
 function saveParams() {
   if (localStorage) {
     localStorage.setItem('server', byId('server').value)
     localStorage.setItem('port', byId('port').value)
-    localStorage.setItem('useSSL', String(byId('SSL').checked))
-    localStorage.setItem('theme', byId('theme').value)
-    closebox('setup')
+    localStorage.setItem('useSSL', byId('SSL').checked)
+    localStorage.setItem('theme', theme);
+    closeBox('Setup')
     init()
-  }
-}
-
-function applyTheme(theme) {
-  const selectedTheme = theme === 'light' ? 'light' : 'dark'
-  document.body.setAttribute('data-theme', selectedTheme)
-
-  const metaThemeColor = document.querySelector('meta[name="theme-color"]')
-  if (metaThemeColor) {
-    metaThemeColor.setAttribute('content', selectedTheme === 'light' ? '#f8fafc' : '#1a1a2e')
-  }
-
-  if (localStorage) {
-    localStorage.setItem('theme', selectedTheme)
-  }
-
-  const themeEl = byId('theme')
-  if (themeEl) {
-    themeEl.value = selectedTheme
   }
 }
 
@@ -42,7 +23,7 @@ function loadParams() {
     server = localStorage.getItem('server')
     port = localStorage.getItem('port')
     useSSL = localStorage.getItem('useSSL')
-    theme = localStorage.getItem('theme')
+    theme = localStorage.getItem('theme');
   }
 
   if (!server) {
@@ -58,6 +39,7 @@ function loadParams() {
   } else {
     useSSL = useSSL === 'true'
   }
+  if (!theme) theme = 'dark';
 
   if (!theme) {
     theme = 'dark'
@@ -66,19 +48,15 @@ function loadParams() {
   if (localStorage) {
     localStorage.setItem('server', server)
     localStorage.setItem('port', port)
-    localStorage.setItem('useSSL', String(useSSL))
+    localStorage.setItem('useSSL', useSSL)
     localStorage.setItem('theme', theme)
   }
 
-  const sEl = byId('server')
-  const pEl = byId('port')
-  const sslEl = byId('SSL')
-  const themeEl = byId('theme')
-  if (sEl) sEl.value = server
-  if (pEl) pEl.value = port
-  if (sslEl) sslEl.checked = useSSL
-  if (themeEl) themeEl.value = theme
+  byId('server').value = server
+  byId('port').value = port
+  byId('SSL').checked = useSSL
   return { server, port, useSSL, theme }
+
 }
 
 // Simple element cache to avoid repeated document.getElementById lookups
@@ -104,9 +82,34 @@ function toast(message) {
   if (!x) return
   x.textContent = message
   x.classList.add('show')
-  setTimeout(function() {
+  setTimeout(function () {
     x.classList.remove('show')
   }, 4000)
+}
+function toggleTheme() {
+  var currentTheme = document.body.classList.contains('light-theme') ? 'light' : 'dark';
+  var newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+  if (localStorage) {
+    localStorage.setItem('theme', newTheme);
+  }
+
+  applyTheme(newTheme);
+}
+
+function applyTheme(theme) {
+  var icon = byId('theme-icon');
+  if (theme === 'light') {
+    document.body.classList.add('light-theme');
+    if (icon) {
+      icon.className = 'ico-star-half-alt'; // Mostra l'icona luna per tornare al dark
+    }
+  } else {
+    document.body.classList.remove('light-theme');
+    if (icon) {
+      icon.className = 'ico-star'; // Mostra l'icona sole per passare al light
+    }
+  }
 }
 
 function openImg(src) {
@@ -137,17 +140,18 @@ function webSocketConnect(server, port, useSSL) {
   }
 
   try {
-    socket.onopen = function() {
+    socket.onopen = function () {
       toast('Connected')
       connected()
     }
-    socket.onmessage = function(msg) {
+    socket.onmessage = function (msg) {
       handle_message(msg)
     }
-    socket.onclose = function() {
+    socket.onclose = function () {
       toast('Connection lost: retrying in 5 seconds')
       console.log('disconnected')
-      setTimeout(function() {
+      setTimeout(function () {
+        var params = loadParams()
         webSocketConnect(params.server, params.port, params.useSSL)
       }, 5000)
     }
@@ -203,14 +207,14 @@ function encodeOvoLength(len) {
   return btoa(binary_string)
 }
 
-var ovoCommand = function() {
+var ovoCommand = function () {
   this.size = 0
   this.category = ''
   this.command = ''
   this.param = ''
 }
 
-var ovoMeta = function() {
+var ovoMeta = function () {
   this.Index = 0
   this.ID = 0
   this.FileName = ''
@@ -393,8 +397,8 @@ function handle_message(msg) {
                 sendCommand('act', 'play', this.parentElement.rowIndex - 1)
               }
             })()
-            ci.onclick = (function() {
-              return function() {
+            ci.onclick = (function () {
+              return function () {
                 sendCommand('req', 'meta', this.parentElement.rowIndex)
                 showbox('songinfo')
               }
@@ -408,18 +412,15 @@ function handle_message(msg) {
           if (playbtn) playbtn.classList.remove('ico-play', 'ico-pause')
           switch (message.param) {
             case '0':
-              if (plstate) plstate.className = 'ico-stop'
-              if (playbtn) playbtn.classList.add('ico-play')
+              byId('plstate').className = 'ico-play'
               break
             case '1':
-              if (plstate) plstate.className = 'ico-play'
-              if (playbtn) playbtn.classList.add('ico-pause')
+              byId('plstate').className = 'ico-pause'
               sendCommand('req', 'meta')
               sendCommand('req', 'coverimg')
               break
             case '2':
-              if (plstate) plstate.className = 'ico-pause'
-              if (playbtn) playbtn.classList.add('ico-play')
+              byId('plstate').className = 'ico-play'
               break
           }
         }
