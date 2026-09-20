@@ -1,3 +1,5 @@
+var params;
+
 function init() {
   var params = loadParams();
   applyTheme(params.theme);
@@ -10,11 +12,13 @@ function saveParams() {
     localStorage.setItem('port', byId('port').value)
     localStorage.setItem('useSSL', byId('SSL').checked)
     localStorage.setItem('theme', theme);
+    closeBox('Setup')
     init()
   }
 }
 
 function loadParams() {
+  let server, port, useSSL, theme
   if (localStorage) {
     server = localStorage.getItem('server')
     port = localStorage.getItem('port')
@@ -37,6 +41,10 @@ function loadParams() {
   }
   if (!theme) theme = 'dark';
 
+  if (!theme) {
+    theme = 'dark'
+  }
+
   if (localStorage) {
     localStorage.setItem('server', server)
     localStorage.setItem('port', port)
@@ -51,13 +59,28 @@ function loadParams() {
 
 }
 
+// Simple element cache to avoid repeated document.getElementById lookups
+let _elCache = Object.create(null)
 function byId(id) {
-  return document.getElementById(id)
+  // return cached element if present
+  const el = _elCache[id]
+  if (el) return el
+  const found = document.getElementById(id)
+  // cache only if exists
+  if (found) _elCache[id] = found
+  return found
 }
 
+function clearElCache() {
+  _elCache = Object.create(null)
+}
+// expose for environments that may rebuild parts of the DOM
+window.clearElCache = clearElCache
+
 function toast(message) {
-  var x = byId('toast')
-  x.innerText = message
+  const x = byId('toast')
+  if (!x) return
+  x.textContent = message
   x.classList.add('show')
   setTimeout(function () {
     x.classList.remove('show')
@@ -90,20 +113,23 @@ function applyTheme(theme) {
 }
 
 function openImg(src) {
-  var newTab = window.open()
-  newTab.document.body.innerHTML = '<img src="' + src + '">'
+  const newTab = window.open()
+  if (!newTab) return false
+  const img = newTab.document.createElement('img')
+  img.src = src
+  newTab.document.body.appendChild(img)
   //  window.open(largeImgSrc, "title here", "width=400, height=300")
   return false
 }
 
 function showbox(id) {
-  var x = byId(id)
-  x.classList.add('show')
+  const dlg = byId(id)
+  if (dlg) dlg.classList.add('show')
 }
 
 function closebox(id) {
-  var x = byId(id)
-  x.className = x.className.replace('show', '')
+  const dlg = byId(id)
+  if (dlg) dlg.className = dlg.className.replace('show', '')
 }
 
 function webSocketConnect(server, port, useSSL) {
@@ -135,9 +161,8 @@ function webSocketConnect(server, port, useSSL) {
 }
 
 function sendCommand(category, command, params) {
-  var msg = category + ':' + command
-  if (!(params == null))
-    msg += '=' + params
+  let msg = category + ':' + command
+  if (!(params == null)) msg += '=' + params
 
   msg = encodeOvoLength(msg.length) + msg
 
@@ -160,24 +185,24 @@ function connected() {
 }
 
 function get_appropriate_w_url(server, port, useSSL) {
-  var protocol = useSSL ? 'wss://' : 'ws://'
+  const protocol = useSSL ? 'wss://' : 'ws://'
   return protocol + server + ':' + port + '/player'
 }
 
 function decodeOvoLength(base64) {
-  var binary_string = window.atob(base64)
-  var len = binary_string.length
-  var num = 0
-  for (var i = 0; i < len; i++) {
+  const binary_string = window.atob(base64)
+  const len = binary_string.length
+  let num = 0
+  for (let i = 0; i < len; i++) {
     num = num | (binary_string.charCodeAt(i) << (len - i - 1) * 8)
   }
   return num
 }
 
 function encodeOvoLength(len) {
-  var binary_string = ''
-  for (var i = 0; i < 3; i++) {
-    binary_string += String.fromCharCode(len >> ((2 - i) * 8) & 0xff)
+  let binary_string = ''
+  for (let i = 0; i < 3; i++) {
+    binary_string += String.fromCharCode((len >> ((2 - i) * 8)) & 0xff)
   }
   return btoa(binary_string)
 }
@@ -205,13 +230,13 @@ var ovoMeta = function () {
 }
 
 function decodeMeta(meta) {
-  var obj = new ovoMeta()
-  var startpos = 4
+  const obj = new ovoMeta()
+  let startpos = 4
 
   function extractfield() {
-    len = decodeOvoLength(meta.substr(startpos, 4))
+    const len = decodeOvoLength(meta.substr(startpos, 4))
     startpos += 4
-    var oldpos = startpos
+    const oldpos = startpos
     startpos += len
     return meta.substr(oldpos, len)
   }
@@ -231,15 +256,15 @@ function decodeMeta(meta) {
 }
 
 function decodePlayList(meta) {
-  var startpos = 4
-  var objs = []
+  let startpos = 4
+  const objs = []
 
-  var totlen = decodeOvoLength(meta.substr(0, 4))
-  var count = meta.substr(4, totlen) * 1
+  const totlen = decodeOvoLength(meta.substr(0, 4))
+  let count = meta.substr(4, totlen) * 1
   startpos += totlen
 
   while (count > 0) {
-    var len = decodeOvoLength(meta.substr(startpos, 4))
+    const len = decodeOvoLength(meta.substr(startpos, 4))
     objs.push(decodeMeta(meta.substr(startpos, len)))
     startpos += (len + 4)
     count -= 1
@@ -248,12 +273,12 @@ function decodePlayList(meta) {
 }
 
 function split_message(msg) {
-  var obj = new ovoCommand()
+  const obj = new ovoCommand()
   obj.size = decodeOvoLength(msg.substr(0, 4))
 
-  var colon = msg.indexOf(':')
+  const colon = msg.indexOf(':')
   obj.category = msg.slice(4, colon)
-  var pos = msg.indexOf('=')
+  const pos = msg.indexOf('=')
   if (pos > -1) {
     obj.command = msg.slice(colon + 1, pos)
     obj.param = msg.slice(pos + 1)
@@ -265,86 +290,110 @@ function split_message(msg) {
 }
 
 function msToTime(duration) {
-  var milliseconds = parseInt((duration % 1000) / 100),
-    seconds = parseInt((duration / 1000) % 60),
-    minutes = parseInt((duration / (1000 * 60)) % 60),
-    hours = parseInt((duration / (1000 * 60 * 60)) % 24)
+  // keep integer parsing for legacy numbers
+  const milliseconds = parseInt((duration % 1000) / 100)
+  const seconds = parseInt((duration / 1000) % 60)
+  const minutes = parseInt((duration / (1000 * 60)) % 60)
+  const hours = parseInt((duration / (1000 * 60 * 60)) % 24)
+
+  let h = ''
+  let m = minutes
+  let s = seconds
 
   if (hours > 0) {
-    hours = hours + ':'
-    minutes = (minutes < 10) ? '0' + minutes : minutes
-  } else {
-    hours = ''
+    h = hours + ':'
+    m = (m < 10) ? '0' + m : m
   }
-  seconds = (seconds < 10) ? '0' + seconds : seconds
+  s = (s < 10) ? '0' + s : s
 
-  return hours + minutes + ':' + seconds
+  return h + m + ':' + s
 }
 
 function handle_message(msg) {
-  if (msg.data.length == 0)
-    return
+  if (msg.data.length == 0) return
 
-  message = split_message(msg.data)
+  const message = split_message(msg.data)
 
   switch (message.category) {
     case 'inf':
       switch (message.command) {
-        case 'pos':
-          byId('songpos').value = message.param
-          byId('textPos').innerText = msToTime(message.param)
-          break
-        case 'vol':
-          byId('volume').value = message.param
-          break
+        case 'pos': {
+          const songpos = byId('songpos')
+          const textPos = byId('textPos')
+          if (songpos) songpos.value = message.param
+          if (textPos) textPos.textContent = msToTime(message.param)
+        }
+        break
+        case 'vol': {
+          const volume = byId('volume')
+          if (volume) volume.value = message.param
+        }
+        break
         case 'mute':
           toggleMute(message.param)
           break
 
-        case 'meta':
-          var meta = decodeMeta(message.param)
+        case 'meta': {
+          const meta = decodeMeta(message.param)
 
           if (meta.Index == -1) {
-            byId('songpos').max = meta.Duration
-            byId('title').innerText = meta.Title
-            byId('artist').innerText = meta.Artist
-            byId('album').innerText = meta.Album
-            byId('textDuration').innerText = msToTime(meta.Duration)
+            const songpos = byId('songpos')
+            if (songpos) songpos.max = meta.Duration
+            const title = byId('title')
+            if (title) title.textContent = meta.Title
+            const artist = byId('artist')
+            if (artist) artist.textContent = meta.Artist
+            const album = byId('album')
+            if (album) album.textContent = meta.Album
+            const textDuration = byId('textDuration')
+            if (textDuration) textDuration.textContent = msToTime(meta.Duration)
           }
-          byId('i_tile').innerText = meta.Title
-          byId('i_album').innerText = meta.Album
-          byId('i_albumartist').innerText = meta.AlbumArtist
-          byId('i_artist').innerText = meta.Artist
-          byId('i_track').innerText = meta.TrackString
-          byId('i_genre').innerText = meta.Genre
-          byId('i_year').innerText = meta.Year
-          byId('i_Comment').innerText = meta.Comment
-          break
+          const i_tile = byId('i_tile')
+          if (i_tile) i_tile.textContent = meta.Title
+          const i_album = byId('i_album')
+          if (i_album) i_album.textContent = meta.Album
+          const i_albumartist = byId('i_albumartist')
+          if (i_albumartist) i_albumartist.textContent = meta.AlbumArtist
+          const i_artist = byId('i_artist')
+          if (i_artist) i_artist.textContent = meta.Artist
+          const i_track = byId('i_track')
+          if (i_track) i_track.textContent = meta.TrackString
+          const i_genre = byId('i_genre')
+          if (i_genre) i_genre.textContent = meta.Genre
+          const i_year = byId('i_year')
+          if (i_year) i_year.textContent = meta.Year
+          const i_Comment = byId('i_Comment')
+          if (i_Comment) i_Comment.textContent = meta.Comment
+        }
+        break
         case 'coverurl':
-        case 'coverimg':
-          if (message.param === '')
-            byId('cover').src = 'asset/nocover.png'
-          else
-            byId('cover').src = message.param
-          break
-        case 'playlist':
-          var playlist = decodePlayList(message.param)
-          var tableObj = byId('pl-data')
-          tableObj.innerText = ''
-          for (var i = 0; i < playlist.length; i++) {
-            var row = tableObj.insertRow(-1)
-            var c0 = row.insertCell(0)
-            c0.innerText = playlist[i].Title
+        case 'coverimg': {
+          const cover = byId('cover')
+          if (cover) cover.src = (message.param === '') ? 'asset/nocover.png' : message.param
+        }
+        break
+        case 'playlist': {
+          const playlist = decodePlayList(message.param)
+          const tableObj = byId('pl-data')
+          if (!tableObj) break
+          tableObj.textContent = ''
+          for (let i = 0; i < playlist.length; i++) {
+            const row = tableObj.insertRow(-1)
+            const c0 = row.insertCell(0)
+            c0.textContent = playlist[i].Title
             c0.setAttribute('data-title', playlist[i].Title)
-            var c1 = row.insertCell(1)
-            c1.innerText = playlist[i].Artist
+            const c1 = row.insertCell(1)
+            c1.textContent = playlist[i].Artist
             c1.setAttribute('data-title', playlist[i].Artist)
-            var c2 = row.insertCell(2)
-            c2.innerText = msToTime(playlist[i].Duration)
-            var ci = row.insertCell(3)
-            ci.innerHTML = '<i class="ico-info-circled"></i>'
-            c0.onclick = (function () {
-              return function () {
+            const c2 = row.insertCell(2)
+            c2.textContent = msToTime(playlist[i].Duration)
+            const ci = row.insertCell(3)
+            // create icon element instead of innerHTML
+            const icon = document.createElement('i')
+            icon.className = 'ico-info-circled'
+            ci.appendChild(icon)
+            c0.onclick = (function() {
+              return function() {
                 sendCommand('act', 'play', this.parentElement.rowIndex - 1)
               }
             })()
@@ -355,9 +404,12 @@ function handle_message(msg) {
               }
             })()
           }
-          break
-        case 'state':
-          byId('playbtn').classList.remove('ico-play', 'ico-pause')
+        }
+        break
+        case 'state': {
+          const playbtn = byId('playbtn')
+          const plstate = byId('plstate')
+          if (playbtn) playbtn.classList.remove('ico-play', 'ico-pause')
           switch (message.param) {
             case '0':
               byId('plstate').className = 'ico-play'
@@ -371,27 +423,31 @@ function handle_message(msg) {
               byId('plstate').className = 'ico-play'
               break
           }
-          break
-        case 'loop':
-          var radios = byId('loopctrl').getElementsByTagName('input')
-          for (var i = 0; i < radios.length; i++) {
-            if ((radios[i].type === 'radio') && (radios[i].value == message.param))
-              radios[i].checked = true
-            else
-              radios[i].checked = false
+        }
+        break
+        case 'loop': {
+          const loopctrl = byId('loopctrl')
+          const radios = loopctrl && loopctrl.getElementsByTagName('input')
+          if (!radios) break
+          for (let i = 0; i < radios.length; i++) {
+            if ((radios[i].type === 'radio') && (radios[i].value == message.param)) radios[i].checked = true
+            else radios[i].checked = false
           }
-
-          break
-        case 'index':
-          var trele = byId('tabpl').getElementsByTagName('tr')
-          for (var i = 0; i < trele.length; i++) {
+        }
+        break
+        case 'index': {
+          const tabpl = byId('tabpl')
+          if (!tabpl) break
+          const trele = tabpl.getElementsByTagName('tr')
+          for (let i = 0; i < trele.length; i++) {
             trele[i].classList.remove('selected')
           }
           if (trele.length > 1) {
             trele[message.param].classList.add('selected')
             // trele[message.param].scrollIntoView([])
           }
-          break
+        }
+        break
       }
       break
     case 'app':
@@ -407,23 +463,24 @@ function handle_message(msg) {
 }
 
 function toggleMute(gui) {
+  const muteEl = byId('mute')
+  if (!muteEl) return
   if (gui == 0) {
-    byId('mute').classList.remove('ico-volume-off')
-    byId('mute').classList.add('ico-volume-up')
-  } else
-    if (gui == 1) {
-      byId('mute').classList.remove('ico-volume-up')
-      byId('mute').classList.add('ico-volume-off')
-    } else {
-      if (byId('mute').classList.contains('ico-volume-off'))
-        sendCommand('act', 'unmute')
-      else
-        sendCommand('act', 'mute')
-    }
+    muteEl.classList.remove('ico-volume-off')
+    muteEl.classList.add('ico-volume-up')
+  } else if (gui == 1) {
+    muteEl.classList.remove('ico-volume-up')
+    muteEl.classList.add('ico-volume-off')
+  } else {
+    if (muteEl.classList.contains('ico-volume-off')) sendCommand('act', 'unmute')
+    else sendCommand('act', 'mute')
+  }
 }
 
 function setVolume() {
-  sendCommand('act', 'vol', byId('volume').value)
+  const volume = byId('volume')
+  if (!volume) return
+  sendCommand('act', 'vol', volume.value)
 }
 
 function loopChange(looping) {
@@ -431,5 +488,7 @@ function loopChange(looping) {
 }
 
 function seek() {
-  sendCommand('act', 'seek', byId('songpos').value)
+  const songpos = byId('songpos')
+  if (!songpos) return
+  sendCommand('act', 'seek', songpos.value)
 }
