@@ -373,11 +373,11 @@ function handle_message(msg) {
         break
         case 'playlist': {
           const playlist = decodePlayList(message.param)
-          const tableObj = byId('pl-data')
+          var tableObj = byId('pl-data')
           if (!tableObj) break
-          tableObj.textContent = ''
+          tableObj.innerText = ''
           for (let i = 0; i < playlist.length; i++) {
-            const row = tableObj.insertRow(-1)
+            var row = tableObj.insertRow(-1)
             const c0 = row.insertCell(0)
             c0.textContent = playlist[i].Title
             c0.setAttribute('data-title', playlist[i].Title)
