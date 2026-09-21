@@ -12,7 +12,7 @@ function saveParams() {
     localStorage.setItem('port', byId('port').value)
     localStorage.setItem('useSSL', byId('SSL').checked)
     localStorage.setItem('theme', theme);
-    closeBox('Setup')
+    closebox('setup')
     init()
   }
 }
