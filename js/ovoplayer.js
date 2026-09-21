@@ -11,7 +11,6 @@ function saveParams() {
     localStorage.setItem('server', byId('server').value)
     localStorage.setItem('port', byId('port').value)
     localStorage.setItem('useSSL', byId('SSL').checked)
-    localStorage.setItem('theme', theme);
     closebox('setup')
     init()
   }
