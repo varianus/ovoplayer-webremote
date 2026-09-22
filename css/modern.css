@@ -80,7 +80,7 @@ body {
     "footer footer";
   grid-template-columns: minmax(400px, 600px) 1fr;
   grid-template-rows: auto 1fr auto;
-  gap: 1rem;
+  column-gap: 1.5rem;
   height: 100vh;
   padding: 0;
   background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
@@ -156,6 +156,7 @@ body {
   flex-direction: column;
   justify-content: space-between;
   overflow-y: auto;
+  margin-right: 0.75rem;
 }
 
 /* Cover Container */
