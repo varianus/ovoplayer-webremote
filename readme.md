@@ -8,6 +8,8 @@ It's developed as a single page web app, using only a custom CSS framework and p
 To configure the ovoplayer connetion, press the "Settings" button on the top right corner of the page and fill the form with the address of the ovoplayer host and port. The default port is 6860. 
 Ovoplayer web remote could also use SSL encryption if you have configured ovoplayer to use SSL. 
 
+If you are using a self-signed certificate in ovoplayer, you need to add an exception in your browser to allow the connection. Point your browser to the "https://<ovoplayer-host>:<port>/test" address and accept the certificate exception. After that, you can use the web remote without any problem.
+
 This web app do not need any hosting or server application, just copy the repository content on some folder of your file system and point your browser to index.html. 
 
 You can also use try the [https://varianus.github.io/ovoplayer-webremote/](https://varianus.github.io/ovoplayer-webremote/) hosted version, but note that this version may not be able to connect to your local ovoplayer instance due to browser security restrictions.
